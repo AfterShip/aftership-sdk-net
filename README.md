@@ -40,9 +40,8 @@ Examples of code
  	
  	//before adding it, lets try to delete (otherwise maybe it would fail if already exist)
  	try{
- 	
- 	//is important to catch the exceptions and read the messages,		    
- 	//it will give you information why the transactions went wrong
+ 		//is important to catch the exceptions and read the messages,		    
+ 		//it will give you information why the transactions went wrong
  		if(connection.deleteTracking(newTracking))
  			Console.Write("Tracking deleted!!");
  	}catch(Exception e){
