@@ -18,7 +18,7 @@ Examples of code
 --------------
 
 	//Create an instance of ConnectionAPI using the token of the user
-	ConnectionAPI connection = new ConnectionAPI("a61d6204-6477-4f6d-93ec-86c4f872fb6b");
+	ConnectionAPI connection = new ConnectionAPI("a61d6204-6477-???-93ec-????????");
 
  	//create a new tracking to add to our account
  	Tracking newTracking = new Tracking ("7126900292");
