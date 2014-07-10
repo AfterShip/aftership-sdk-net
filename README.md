@@ -42,8 +42,9 @@ Examples of code
  	try{
  	
  	//is important to catch the exceptions and read the messages,		    
- 	//it will give you information why the transactions went wrong		     								if(connection.deleteTracking(newTracking))
- 		Console.Write("Tracking deleted!!");
+ 	//it will give you information why the transactions went wrong
+ 		if(connection.deleteTracking(newTracking))
+ 			Console.Write("Tracking deleted!!");
  	}catch(Exception e){
  		Console.Write (e.Message);
  	}	
