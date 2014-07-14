@@ -1,13 +1,22 @@
 API Aftership .NET SDK
 ==============
 
+Aftership SDK .NET Version 4.0.0
+
 Before you start
 --------------
 
-  - You need to import Newtonsoft.Json, download the library compatible with
-  your OS and .Net version.
-  - If you want to run the test, you also need NUnit.Framework
-  - Don't forget to import the reference to System.Web
+There is two ways of use this SDK, download the package from Nuget, or download
+the source files from github.
+
+  - If you are using the source files you need to import Newtonsoft.Json,
+  download the library compatible with your OS and .Net version. (Nuget will
+  install the library automatically).
+  - Don't forget to import the reference to System.Web, the project reference
+  framework can't be Client Profile (otherwise you won't have access to this
+  library).
+  - If you want to run the test (using the source), you also need NUnit.Framework
+
 
 Tips
 --------------
@@ -19,6 +28,10 @@ Tips
 Examples of code
 --------------
 
+	using System;
+	using Newtonsoft.Json;
+	using Aftership.Enums;
+	using System.Collections.Generic;
 	//Create an instance of ConnectionAPI using the token of the user
 	ConnectionAPI connection = new ConnectionAPI("a61d6204-6477-???-93ec-????????");
 
