@@ -17,6 +17,8 @@ namespace Aftership
 	
 		String _tokenAftership;
 		private static String URL_SERVER = "https://api.aftership.com/";
+
+		//private static String URL_SERVER = "http://192.168.5.100:3001/";
 		private static String VERSION_API = "v4";
 
 		/// <summary>
@@ -162,6 +164,7 @@ namespace Aftership
         {
 			string url = URL_SERVER  + VERSION_API + urlResource;
 			string json_response = "";
+			Console.Write (url);
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 

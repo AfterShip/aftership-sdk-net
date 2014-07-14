@@ -23,9 +23,8 @@ namespace Aftership
 
 		public void add(String name, List<String> list) {
 			query += "&";
-			String test = String.Join (",", list);
 
-			String value =String.Join(",",list);
+			String value =String.Join(",",list.ToArray());
 			encode(name, value);
 		}
 
@@ -44,7 +43,7 @@ namespace Aftership
 			return query;
 		}
 
-		public String ToString() {
+		public override String  ToString() {
 			return getQuery();
 		}
 	}
