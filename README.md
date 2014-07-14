@@ -6,7 +6,7 @@ Aftership SDK .NET Version 4.0.0
 Before you start
 --------------
 
-There is two ways of use this SDK, download the package from Nuget, or download
+There are two ways of use this SDK, download the package from Nuget, or download
 the source files from github.
 
   - If you are using the source files you need to import Newtonsoft.Json,
