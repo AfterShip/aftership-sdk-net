@@ -92,3 +92,15 @@ Examples of code
  	trackingGet3.slug = "deutsch-post";
  	trackingGet3.trackingShipDate = "20140627";
  	connection.getTrackingByNumber (trackingGet3);
+ 	
+ 	
+
+For Aftership developers
+--------------
+
+Generate a new version of the project in Nuget:
+
+- Mofify the file Aftership-API.nuspec with the new version (as 4.0.5) in the same directory as the .csproj file (c# project file).
+- Dowload Nuget.exe (in Windows).
+- Run with cmd at the directory where the .nuspec is: nuget pack
+- That generates an .nupkg file. This is the file we have to upload to the the Nuget library.
