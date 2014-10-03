@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Aftership</id>
+    <version>4.0.4</version>
+    <authors>Aftership Team</authors>
+    <owners>Aftership</owners>
+    <projectUrl>https://www.aftership.com/</projectUrl>
+    <iconUrl>https://www.aftership.com/assets/common/img/logo-aftership-premium-bright.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description> Aftership API, track your shipments </description>
+    <copyright>Copyright 2014</copyright>
+    <tags>Aftership Track Tracking Courier Couriers</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="3.5.8" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
+      <frameworkAssembly assemblyName="System.Net" targetFramework="net40-client, net40" />
+      <frameworkAssembly assemblyName="System" targetFramework="sl3" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

@@ -11,7 +11,7 @@ namespace Aftership{
 		{
 
 			//Create an instance of ConnectionAPI using the token of the user
-			ConnectionAPI connection = new ConnectionAPI("a61d6204-6477-???-93ec-????????");
+            ConnectionAPI connection = new ConnectionAPI("a61d6204-????-4f6d-93ec-?????????");
 
 			//create a new tracking to add to our account
 			Tracking newTracking = new Tracking ("7126900292");
@@ -56,10 +56,10 @@ namespace Aftership{
 			//	* by slug, tracking number and optinally required params
 
 			//example id:
-			Tracking trackingGet1 = new Tracking("");//you dont care about tracking number
-			trackingGet1.id = "53be255bfdacaaae7b17834b";
-			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
-
+//			Tracking trackingGet1 = new Tracking("");//you dont care about tracking number
+//			trackingGet1.id = "53be255bfdacaaae7b17834b";
+//			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
+//
 			//example slug, tracking:
 			Tracking trackingGet2 = new Tracking("RC328021065CN");
 			trackingGet2.slug = "canada-post";
@@ -71,7 +71,13 @@ namespace Aftership{
 			trackingGet3.trackingShipDate = "20140627";
 			connection.getTrackingByNumber (trackingGet3);
 
+            Tracking trackingGet4 = new Tracking ("9405510897700003230737");
+            trackingGet4.slug = "usps";
+//            Tracking trackingAdded1 = connection.createTracking(trackingGet4);
+//            Console.WriteLine (">>>>"+trackingAdded1.ToString ());
 
+            Tracking test_usps = connection.getTrackingByNumber (trackingGet4);
+            Console.WriteLine ("");
 		}
 
 	}
