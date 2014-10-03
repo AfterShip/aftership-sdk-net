@@ -164,7 +164,6 @@ namespace Aftership
         {
 			string url = URL_SERVER  + VERSION_API + urlResource;
 			string json_response = "";
-			Console.Write (url);
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 
@@ -174,7 +173,7 @@ namespace Aftership
             request.Headers = header;
 			request.ContentType = "application/json";
 			request.Method = method;
-			//Console.WriteLine(" Requesting the URL :"+ url);
+//			Console.WriteLine(" Requesting the URL :"+ url);
 
 			if(body!=null){
 
@@ -186,6 +185,7 @@ namespace Aftership
 					streamWriter.Close();
 				}
 			}
+
 			try{
 				HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 				StreamReader reader = new StreamReader(response.GetResponseStream());

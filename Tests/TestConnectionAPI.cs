@@ -13,7 +13,7 @@ namespace MonoTests.TestConnectionAPI
 	public class TestConnectionAPI
 	{
 		//remember to change your API Key
-		ConnectionAPI connection  = new ConnectionAPI("a61d6204-6477-????-93ec-?????");
+        ConnectionAPI connection  = new ConnectionAPI("a61d6204-6477-4f6d-93ec-86c4f872fb6b");
 
 		//post tracking number
 		String trackingNumberPost ="05167019264110";
@@ -69,6 +69,15 @@ namespace MonoTests.TestConnectionAPI
 					connection.createTracking(newTracking);}catch (Exception e) {
 					Console.WriteLine("**3"+e.Message);
 				}
+                try{
+                    Tracking newTracking1 = new Tracking("9400110897700003231250");
+                    newTracking1.slug = "usps";
+                    connection.createTracking(newTracking1);}catch (Exception e) {
+                        Console.WriteLine("**4"+e.Message);
+
+                }
+
+
 			}
 
 		}
@@ -133,7 +142,7 @@ namespace MonoTests.TestConnectionAPI
 				Assert.IsTrue (false, "#A16");
 			} catch (Exception e) {
 				Console.WriteLine (e.Message);
-				Assert.AreEqual ("{\"meta\":{\"code\":4008,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\",\"title\":\"asdq\"}}}",
+				Assert.AreEqual ("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\",\"title\":\"asdq\"}}}",
 					e.Message, "#A17");
 			}
 		}
@@ -175,7 +184,7 @@ namespace MonoTests.TestConnectionAPI
 				//always should give an exception before this
 				Assert.IsTrue(false,"#A21");
 			}catch (Exception e){
-				Assert.AreEqual("{\"meta\":{\"code\":4008,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"slug\":\"fedex\",\"tracking_number\":\"adfa\"}}}",
+                Assert.AreEqual("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{}}",
 					e.Message,"#A22");
 			}
 		}
@@ -232,7 +241,7 @@ namespace MonoTests.TestConnectionAPI
 				Assert.IsTrue(false,"#A28");
 			}catch (Exception e){
 				Console.Write (e.Message);
-				Assert.AreEqual("{\"meta\":{\"code\":4008,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"slug\":\"fedex\",\"tracking_number\":\"adf\"}}}",
+				Assert.AreEqual("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{}}",
 					e.Message,"#A29");
 			}
 		}
@@ -326,6 +335,31 @@ namespace MonoTests.TestConnectionAPI
 			Assert.AreEqual( "20140627",tracking3.trackingShipDate,"#F2");
 
 		}
+            
+
+        [Test]
+        public void testGetTrackingByNumber10(){
+            //courier require postalCode
+            Tracking trackingGet1 = new Tracking("9405510897700003230737");
+            trackingGet1.slug = "usps";
+            Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
+
+            Assert.AreEqual("Priority Mail 2-Day&#153;", tracking3.shipmentType,"#C1");
+//            Assert.AreEqual( "3",tracking3.expectedDelivery,"#C2");
+
+        }
+
+        [Test]
+        public void testGetTrackingByNumber11(){
+            //courier require postalCode
+            Tracking trackingGet1 = new Tracking("9400110897700003231250");
+            trackingGet1.slug = "usps";
+            Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
+
+            Assert.AreEqual("First-Class Package Service", tracking3.shipmentType,"#C1");
+            Assert.AreEqual( "Shipping Label Created",tracking3.checkpoints[0].message,"#C2");
+
+    }
 
 	}
 }
