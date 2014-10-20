@@ -166,9 +166,8 @@ namespace Aftership{
 			} 
 
 			//fields that can't be updated by the user, only retrieve
-
-			_createdAt = trackingJSON["created_at"]==null?DateTime.MinValue:(DateTime)DateTime.Parse((String)trackingJSON["created_at"],  null, DateTimeStyles.RoundtripKind);
-			_updatedAt = trackingJSON["updated_at"]==null?DateTime.MinValue:(DateTime)DateTime.Parse((String)trackingJSON["updated_at"],  null, DateTimeStyles.RoundtripKind);
+            _createdAt = trackingJSON["created_at"]== null?DateTime.MinValue:DateMethods.getDate((String)trackingJSON["created_at"]);
+            _updatedAt = trackingJSON["updated_at"]==null?DateTime.MinValue:DateMethods.getDate((String)trackingJSON["updated_at"]);
 			_expectedDelivery = trackingJSON["expected_delivery"]==null?null:(String)trackingJSON["expected_delivery"];
 
 			_active = trackingJSON ["active"] == null? false : (bool) trackingJSON["active"];
@@ -435,11 +434,15 @@ namespace Aftership{
 			return "";
 
 		}
+
+        public override string ToString(){
+
+            return "_id: " + _id + "\n_trackingNumber: " + _trackingNumber + "\n_slug:" + _slug;
+            
+        }
 	}
 
-//    public void toString(){
-//
-//    }
+
 }
 
 

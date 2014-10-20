@@ -8,7 +8,7 @@ namespace Aftership
 	public class Checkpoint
 	{
 		/// Date and time of the tracking created. 
-		private String _createdAt;
+        private DateTime _createdAt;
 
 		/// Date and time of the checkpoint, provided by courier. Value may be:
      	///Empty String,
@@ -39,8 +39,9 @@ namespace Aftership
 		private String _zip;
 
 		public Checkpoint (JObject checkpointJSON){
-
-			this.createdAt = checkpointJSON["created_at"]==null?null:(String)checkpointJSON["created_at"];
+           // Console.WriteLibe(typeof(checkpointJSON["created_at"]));
+            this.createdAt = checkpointJSON["created_at"]== null? DateTime.MinValue:
+                DateMethods.getDate((String)checkpointJSON["created_at"]);
 			this.checkpointTime = checkpointJSON["checkpoint_time"]==null?null:(String)checkpointJSON["checkpoint_time"];
 			this.city = checkpointJSON["city"]==null?null:(String)checkpointJSON["city"];
 			this.countryISO3 = checkpointJSON["country_iso_3"]==null?0:
@@ -52,7 +53,7 @@ namespace Aftership
 			this.zip = checkpointJSON["zip"]==null?null:(String)checkpointJSON["zip"];
 		}
 
-		public String createdAt{
+        public DateTime createdAt{
 			get { return _createdAt; }
 			set { _createdAt = value; }
 		}
