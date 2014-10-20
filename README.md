@@ -93,6 +93,20 @@ Examples of code
  	trackingGet3.trackingShipDate = "20140627";
  	connection.getTrackingByNumber (trackingGet3);
  	
+ 	//example ge trackings for our account, the 1 means get the first 100, 
+ 	//with a 2 we would get from 100 to 200 etc
+ 	List<Tracking> listTrackings = connection.getTrackings (1);
+    Console.WriteLine ("Number of trackings-> "+listTrackings.Count);
+    for (i = 0; i < listTrackings.Count; i++) {
+    	Console.WriteLine (listTrackings [i].ToString ());
+    }
+    
+    //example get only the trackings from Spain
+    ParametersTracking param1 = new ParametersTracking();
+    //in param1 we add all the options we want
+	param1.addDestination(ISO3Country.ESP);  
+ 	List<Tracking> totalSpain =connection.getTrackings(param1);
+
  	
 
 For Aftership developers
