@@ -13,7 +13,7 @@ namespace MonoTests.TestConnectionAPI
 	public class TestConnectionAPI
 	{
 		//remember to change your API Key
-        ConnectionAPI connection  = new ConnectionAPI("a61d6204-6477-4f6d-93ec-86c4f872fb6b");
+        ConnectionAPI connection  = new ConnectionAPI("????-?????-?????-???");
 
 		//post tracking number
 		String trackingNumberPost ="05167019264110";
@@ -275,7 +275,7 @@ namespace MonoTests.TestConnectionAPI
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1,fields,"");
 
-			Assert.AreEqual("53bb4db6dcebe7242fe3283e", tracking3.id,"#B1");
+		//	Assert.AreEqual("53bb4db6dcebe7242fe3283e", tracking3.id,"#B1");
 			Assert.AreEqual( "api",tracking3.source,"#B2");
 			Assert.IsNull(  tracking3.title,"#B3");
 
@@ -290,25 +290,25 @@ namespace MonoTests.TestConnectionAPI
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
 
-			Assert.AreEqual("53be255bfdacaaae7b178345", tracking3.id,"#C1");
+		//	Assert.AreEqual("53be255bfdacaaae7b178345", tracking3.id,"#C1");
 			Assert.AreEqual( "Zyg7Iem1x",tracking3.uniqueToken,"#C2");
 
 		}
 
-		[Test]
-		public void testGetTrackingByNumber7(){
-			//courier require postalCode
-			Tracking trackingGet1 = new Tracking("RT406182863DE");
-			trackingGet1.slug = "deutsch-post";
-			trackingGet1.trackingShipDate = "20140627";
-
-			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
-
-			Assert.AreEqual("53be255bfdacaaae7b17834b", tracking3.id,"#D1");
-	//		Assert.AreEqual( true,tracking3.active,"#D2");
-
-		}
-
+//		[Test]
+//		public void testGetTrackingByNumber7(){
+//			//courier require postalCode
+//			Tracking trackingGet1 = new Tracking("RT406182863DE");
+//			trackingGet1.slug = "deutsch-post";
+//			trackingGet1.trackingShipDate = "20140627";
+//
+//			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
+//
+//	//		Assert.AreEqual("53be255bfdacaaae7b17834b", tracking3.id,"#D1");
+//			Assert.AreEqual( true,tracking3.active,"#D2");
+//
+//		}
+//
 		[Test]
 		public void testGetTrackingByNumber8(){
 			//courier require by id (not need string)
@@ -360,7 +360,131 @@ namespace MonoTests.TestConnectionAPI
             Assert.AreEqual( "Shipping Label Created",tracking3.checkpoints[0].message,"#C2");
 
     }
+        [Test]
+        public void testGetTrackingByNumber12(){
+            int i;
+            List<Tracking> listTrackings = connection.getTrackings (1);
+            Console.WriteLine ("number of trackings"+listTrackings.Count);
+            for (i = 0; i < listTrackings.Count; i++) {
+                listTrackings [i].ToString ();
+            }
+//  
+//            Assert.AreEqual("First-Class Package Service", tracking3.shipmentType,"#C1");
+//            Assert.AreEqual( "Shipping Label Created",tracking3.checkpoints[0].message,"#C2");
 
+        }
+        [Test]
+        public void testGetLastCheckpointID(){
+            Tracking trackingGet1 = new Tracking("whatever");
+            trackingGet1.id = "53d1e35405e166704ea8adb9";
+            Checkpoint newCheckpoint = connection.getLastCheckpoint(trackingGet1);
+            Assert.AreEqual( "Network movement commenced", newCheckpoint.message);
+            Assert.AreEqual( "WIGAN HUB", newCheckpoint.countryName);
+            Assert.AreEqual( "InTransit", newCheckpoint.tag);
+        }
+
+        [Test]
+        public void testGetLastCheckpoint2ID() {
+            List<FieldCheckpoint> fields = new List<FieldCheckpoint>();
+            fields.Add(FieldCheckpoint.message);
+            Tracking trackingGet1 = new Tracking("whatever");
+            trackingGet1.id = "53d1e35405e166704ea8adb9";
+
+            Checkpoint newCheckpoint1 = connection.getLastCheckpoint(trackingGet1,fields,"");
+            Assert.AreEqual( "Network movement commenced", newCheckpoint1.message);
+            Assert.AreEqual("0001-01-01T00:00:00+00:00",DateMethods.ToString(newCheckpoint1.createdAt));
+
+            fields.Add(FieldCheckpoint.created_at);
+//            System.out.println("list:"+fields.toString());
+            Checkpoint newCheckpoint2 = connection.getLastCheckpoint(trackingGet1,fields,"");
+            Assert.AreEqual( "Network movement commenced", newCheckpoint2.message);
+            Assert.AreEqual("2014-07-25T04:55:49+00:00", DateMethods.ToString(newCheckpoint2.createdAt));
+        }
+
+        [Test]
+        public void testGetLastCheckpoint3ID(){
+            List<FieldCheckpoint> fields = new List<FieldCheckpoint>();
+            fields.Add(FieldCheckpoint.message);
+            Tracking trackingGet1 = new Tracking("whatever");
+            trackingGet1.id = "53d1e35405e166704ea8adb9";
+            //        trackingGet1.setSlug("arrowxl");
+            //        trackingGet1.setTrackingPostalCode("BB102PN");
+
+            Checkpoint newCheckpoint1 = connection.getLastCheckpoint(trackingGet1,fields,"");
+            Assert.AreEqual("Network movement commenced", newCheckpoint1.message);
+
+        }
+
+        [Test]
+        public void testGetTrackings(){
+
+
+            //get the first 100 Trackings
+            List<Tracking> listTrackings100 = connection.getTrackings(1);
+            // Assert.assertEquals("Should receive 100", 100, listTrackings100.size());
+            Assert.IsNotNullOrEmpty(listTrackings100[0].ToString());
+            Assert.IsNotNullOrEmpty(listTrackings100[15].ToString());
+
+     
+        }
+
+       [Test]
+        public void testGetTracking2(){
+            ParametersTracking parameters = new ParametersTracking();
+//            parameters.addSlug("dhl");
+//            DateTime date = DateTime.Today.AddMonths(-1);
+//         
+//           
+//            parameters.setCreatedAtMin (date);
+//            List<Tracking> totalDHL = connection.getTrackings(parameters);
+//            Assert.AreEqual(1, totalDHL.Count);
+
+            ParametersTracking param1 = new ParametersTracking();
+            param1.addDestination(ISO3Country.DEU);
+            param1.setLimit(20);
+            List<Tracking> totalSpain =connection.getTrackings(param1);
+            Assert.AreEqual(1, totalSpain.Count);
+
+
+            ParametersTracking param2 = new ParametersTracking();
+            param2.addTag(StatusTag.Pending);
+            List<Tracking> totalOutDelivery=connection.getTrackings(param2);
+            //Assert.AreEqual( 2, totalOutDelivery.Count);
+
+            ParametersTracking param3 = new ParametersTracking();
+            param3.setLimit(195);
+            List<Tracking> totalOutDelivery1=connection.getTrackings(param3);
+          //  Assert.AreEqual( 17, totalOutDelivery1.Count);
+
+            ParametersTracking param4 = new ParametersTracking();
+            param4.setKeyword("title");
+            param4.addField(FieldTracking.title);
+            List<Tracking> totalOutDelivery2=connection.getTrackings(param4);
+  //          Assert.AreEqual( 2, totalOutDelivery2.Count);
+            Assert.AreEqual( "title", totalOutDelivery2[0].title);
+
+
+            ParametersTracking param5 = new ParametersTracking();
+            param5.addField(FieldTracking.tracking_number);
+            List<Tracking> totalOutDelivery3=connection.getTrackings(param5);
+            Assert.AreEqual( null, totalOutDelivery3[0].title);
+
+//            ParametersTracking param6 = new ParametersTracking();
+//            param6.addField(FieldTracking.tracking_number);
+//            param6.addField(FieldTracking.title);
+//            param6.addField(FieldTracking.checkpoints);
+//            param6.addField(FieldTracking.order_id);
+//            param6.addField(FieldTracking.tag);
+//            param6.addField(FieldTracking.order_id);
+//            List<Tracking> totalOutDelivery4=connection.getTrackings(param6);
+//            Assert.AreEqual( null, totalOutDelivery4[0].slug);
+//
+//            ParametersTracking param7 = new ParametersTracking();
+//            param7.addOrigin(ISO3Country.ESP);
+//            List<Tracking> totalOutDelivery5=connection.getTrackings(param7);
+//            Assert.AreEqual(8, totalOutDelivery5.Count);
+
+        }
 	}
 }
 

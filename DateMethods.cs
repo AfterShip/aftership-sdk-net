@@ -22,7 +22,7 @@ namespace Aftership
 //                throw new AftershipAPIException("The date receive is not properly formatted yyyy-MM-dd'T'HH:mm:ssZ and is: "
 //                    +date);
             //            },
-            Console.WriteLine (date.Length +"date >>> " + date);
+//            Console.WriteLine (date.Length +"date >>> " + date);
             if (date.Length == 25) {
                     return DateTime.ParseExact(date,ISO8601Long, System.Globalization.CultureInfo.InvariantCulture);  
             }

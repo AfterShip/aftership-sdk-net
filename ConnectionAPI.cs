@@ -88,7 +88,6 @@ namespace Aftership
             JObject checkpointJSON = (JObject)response["data"]["checkpoint"];
             Checkpoint checkpoint = null;
             if(checkpointJSON.Count!=0) {
-                Console.WriteLine ("*****"+checkpointJSON["created_at"]);
                 checkpoint = new Checkpoint(checkpointJSON);
             }
 
@@ -449,7 +448,8 @@ namespace Aftership
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 
-            request.Timeout = 10000;
+            request.Timeout = 150000;
+//            request.Timeout = 1;
             WebHeaderCollection header = new WebHeaderCollection();
             header.Add("aftership-api-key", _tokenAftership);
             request.Headers = header;
@@ -470,21 +470,24 @@ namespace Aftership
 
 			try{
 				HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-				StreamReader reader = new StreamReader(response.GetResponseStream());
-				json_response = reader.ReadToEnd();
-			
+//                if(response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created){
+                    StreamReader reader = new StreamReader(response.GetResponseStream());
+                    json_response = reader.ReadToEnd();
+//                }else if (response.StatusCode == HttpStatusCode.RequestTimeout){
+//                    throw new TimeoutException();
+//                }else{
+//                    throw new WebException(response.StatusCode.ToString());
+//                }
 			}catch(WebException e){
 				if (e.Response == null) {
                     throw e;
 					//timeout or bad internet conexion
 				} else {
-
 					//probably Aftership will give more information of the problem, so we read the response
 					HttpWebResponse response = e.Response as HttpWebResponse;				
 					using (Stream stream = response.GetResponseStream ())
 					using (var reader = new StreamReader (stream)) {
 						String text = reader.ReadToEnd ();
-
 						throw new WebException (text, e);
 					}
 				}
@@ -492,7 +495,7 @@ namespace Aftership
 			}catch(Exception e){
 				throw e;
 			}
-            Console.WriteLine ("!!!!"+json_response+"!!!");
+//            Console.WriteLine ("Response request: "+json_response+"*");
 			return JObject.Parse(json_response);;
         }
 
@@ -508,7 +511,6 @@ namespace Aftership
 			}
 
 			return listString;
-
 
 		}
 

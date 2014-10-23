@@ -11,7 +11,9 @@ namespace Aftership{
 		{
    
 //			//Create an instance of ConnectionAPI using the token of the user
-            ConnectionAPI connection = new ConnectionAPI("??-??-??-93ec-???");
+            ConnectionAPI connection = new ConnectionAPI("????-?????-?????-???");
+            //ConnectionAPI connection = new ConnectionAPI("93ac55c6-b86c-46dd-a8f4-5dfacd84a295");
+
 //
 //			//create a new tracking to add to our account
 //			Tracking newTracking = new Tracking ("7126900292");
@@ -104,21 +106,26 @@ namespace Aftership{
 //            Console.Write (DateMethods.ToString(newCheckpoint2.createdAt));
 //          
 //
-//            ParametersTracking parameters = new ParametersTracking();
-//            parameters.addSlug("dhl");
-//            DateTime date = DateTime.Today.AddMonths(-1);
-//
-//
-//            parameters.setCreatedAtMin (date);
-//            List<Tracking> totalDHL = connection.getTrackings(parameters);
-//         
-//
+            ParametersTracking parameters = new ParametersTracking();
+            parameters.addSlug("dhl");
+            DateTime date = DateTime.Today.AddMonths(-1);
+
+
+            parameters.setCreatedAtMin (date);
+            try{
+            List<Tracking> totalDHL = connection.getTrackings(parameters);
+            }catch(Exception e){
+                Console.WriteLine (e);
+            }
 //            ParametersTracking param1 = new ParametersTracking();
 //            param1.addDestination(ISO3Country.ESP);
 //            param1.setLimit(20);
 //            List<Tracking> totalSpain =connection.getTrackings(param1);
 //           
 //            List<Tracking> totalSpain2 =connection.getTrackingsNext(param1);
+//
+//            connection.getTrackings (1);
+//
 		}
 
 	}
