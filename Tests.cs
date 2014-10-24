@@ -12,7 +12,6 @@ namespace Aftership{
    
 //			//Create an instance of ConnectionAPI using the token of the user
             ConnectionAPI connection = new ConnectionAPI("????-?????-?????-???");
-            //ConnectionAPI connection = new ConnectionAPI("93ac55c6-b86c-46dd-a8f4-5dfacd84a295");
 
 //
 //			//create a new tracking to add to our account
@@ -111,7 +110,7 @@ namespace Aftership{
             DateTime date = DateTime.Today.AddMonths(-1);
 
 
-            parameters.setCreatedAtMin (date);
+            parameters.createdAtMin = date;
             try{
             List<Tracking> totalDHL = connection.getTrackings(parameters);
             }catch(Exception e){
