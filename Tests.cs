@@ -109,7 +109,6 @@ namespace Aftership{
             parameters.addSlug("dhl");
             DateTime date = DateTime.Today.AddMonths(-1);
 
-
             parameters.createdAtMin = date;
             try{
             List<Tracking> totalDHL = connection.getTrackings(parameters);

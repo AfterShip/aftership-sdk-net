@@ -187,10 +187,11 @@ namespace Aftership
                 for (int i = 0; i < trackingJSON.Count; i++) {
                     trackingList.Add(new Tracking((JObject)trackingJSON[i]));
                 }
-                parameters.setTotal(size);
+                parameters.total = size;
             }
             return trackingList;
         }
+
 
         /// <summary>
         ///Return a list of couriers supported by AfterShip along with their names, URLs and slugs
@@ -330,7 +331,7 @@ namespace Aftership
 
 
         public List<Tracking> getTrackingsNext(ParametersTracking parameters){
-            parameters.setPage(parameters.getPage()+1);
+            parameters.page = parameters.page +1;
             return this.getTrackings(parameters);
         }
 

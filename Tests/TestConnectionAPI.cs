@@ -13,7 +13,7 @@ namespace MonoTests.TestConnectionAPI
 	public class TestConnectionAPI
 	{
 		//remember to change your API Key
-        ConnectionAPI connection  = new ConnectionAPI("????????????????????????????");
+        ConnectionAPI connection  = new ConnectionAPI("???????-????-????????");
         static int TOTAL_COURIERS_API = 222;
 
         String [] couriersDetected={"dpd","fedex"};
@@ -555,8 +555,8 @@ namespace MonoTests.TestConnectionAPI
             DateTime date = DateTime.Today.AddMonths(-1);
 
 
-            parameters.setCreatedAtMin (date);
-            parameters.setLimit(50);
+            parameters.createdAtMin = date;
+            parameters.limit = 50;
 
             List<Tracking> totalDHL = connection.getTrackings(parameters);
             Assert.AreEqual(2, totalDHL.Count);
@@ -567,7 +567,7 @@ namespace MonoTests.TestConnectionAPI
 
             ParametersTracking param1 = new ParametersTracking();
             param1.addDestination(ISO3Country.DEU);
-            param1.setLimit(20);
+            param1.limit = 20;
             List<Tracking> totalSpain =connection.getTrackings(param1);
             Assert.AreEqual(1, totalSpain.Count);
         }
@@ -576,7 +576,7 @@ namespace MonoTests.TestConnectionAPI
         public void testGetTrackings_C(){
             ParametersTracking param2 = new ParametersTracking();
             param2.addTag(StatusTag.Delivered);
-            param2.setLimit(50);
+            param2.limit = 50;
 
             List<Tracking> totalOutDelivery=connection.getTrackings(param2);
             Assert.AreEqual( 4, totalOutDelivery.Count);
@@ -586,7 +586,7 @@ namespace MonoTests.TestConnectionAPI
         [Test]
         public void testGetTrackings_D(){
             ParametersTracking param3 = new ParametersTracking();
-            param3.setLimit(50);
+            param3.limit = 50;
             List<Tracking> totalOutDelivery1=connection.getTrackings(param3);
             Assert.AreEqual( 18, totalOutDelivery1.Count);
         }
@@ -595,9 +595,9 @@ namespace MonoTests.TestConnectionAPI
         public void testGetTrackings_E(){
 
             ParametersTracking param4 = new ParametersTracking();
-            param4.setKeyword("title");
+            param4.keyword = "title";
             param4.addField(FieldTracking.title);
-            param4.setLimit(50);
+            param4.limit = 50;
 
             List<Tracking> totalOutDelivery2=connection.getTrackings(param4);
           //  Assert.AreEqual( 2, totalOutDelivery2.Count);

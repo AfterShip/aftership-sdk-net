@@ -10,207 +10,181 @@ namespace Aftership{
     public class ParametersTracking
     {
         /** Page to show. (Default: 1) */
-        private int page;
+        private int _page;
 
         /** Number of trackings each page contain. (Default and max: 100) */
-        private int limit;
+        private int _limit;
 
         /** Search the content of the tracking record fields: trackingNumber, title, orderId, customerName,
      * customFields, orderId, emails, smses */
-        private String keyword;
+        private String _keyword;
 
         /** Unique courier code Use comma for multiple values. (Example: dhl,ups,usps) */
-        private List<String> slugs;
+        private List<String> _slugs;
 
         /**  Origin country of trackings. Use ISO Alpha-3 (three letters).
      * (Example: USA,HKG) */
-        private List<ISO3Country> origin;
+        private List<ISO3Country> _origins;
 
         /** Destination country of trackings. Use ISO Alpha-3 (three letters).
      * (Example: USA,HKG) */
-        private List<ISO3Country> destination;
+        private List<ISO3Country> _destinations;
 
         /** Current status of tracking. */
-        private List<StatusTag> tags;
+        private List<StatusTag> _tags;
 
         /** Start date and time of trackings created. AfterShip only stores data of 90 days.
      * (Defaults: 30 days ago, Example: 2013-03-15T16:41:56+08:00) */
-        private DateTime createdAtMin;
+        private DateTime _createdAtMin;
 
         /** End date and time of trackings created. (Defaults: now, Example: 2013-04-15T16:41:56+08:00) */
-        private DateTime createdAtMax;
+        private DateTime _createdAtMax;
 
         /** List of fields to include in the response. Fields to include: title, orderId, tag, checkpoints,
      * checkpointTime, message, countryName. (Defaults: none, Example: title,orderId) */
-        private List<FieldTracking> fields;
+        private List<FieldTracking> _fields;
 
         /** Language, default: ''
      * Example: 'en' Support Chinese to English translation for  china-ems  and  china-post  only */
-        private String lang;
+        private String _lang;
 
         /** Total of tracking elements from the user that match the ParametersTracking object*/
-        private int total;
+        private int _total;
 
 
         public ParametersTracking() {
-            this.page = 1;
-            this.limit = 100; 
+            this._page = 1;
+            this._limit = 100; 
         }
 
         public void addSlug(String slug) {
-
-            if (this.slugs == null) {
-                this.slugs = new List<String>();
-                this.slugs.Add(slug);
-            } else {
-                this.slugs.Add(slug);
+            if (_slugs == null) {
+                _slugs = new List<String>();
+                _slugs.Add(slug);
+            }  else {
+                _slugs.Add(slug);
             }
         }
 
-        public void deleteSlug(String slug) {
-            if (this.slugs != null) {
-                this.slugs.Remove(slug);
+        public void deleteRequireField(String slug){
+            if (_slugs != null) {
+                _slugs.Remove (slug);
             }
         }
 
-        public void deleteSlug() {
-            this.slugs = null;
+        public void deleteSlugs(){
+            _slugs = null;
         }
 
         public void addOrigin(ISO3Country origin) {
-
-            if (this.origin == null) {
-                this.origin = new List<ISO3Country>();
-                this.origin.Add(origin);
-            } else {
-                this.origin.Add(origin);
+            if (_origins == null) {
+                _origins = new List<ISO3Country>();
+                _origins.Add(origin);
+            }  else {
+                _origins.Add(origin);
             }
         }
 
-        public void deleteOrigin(ISO3Country origin) {
-            if (this.origin != null) {
-                this.origin.Remove(origin);
+        public void deleteOrigin(ISO3Country origin){
+            if (_origins != null) {
+                _origins.Remove (origin);
             }
         }
-
-        public void deleteOrigin() {
-            this.origin = null;
+            
+        public void deleteOrigins(){
+            _origins = null;
         }
-
+    
         public void addDestination(ISO3Country destination) {
-
-            if (this.destination == null) {
-                this.destination = new List<ISO3Country>();
-                this.destination.Add(destination);
-            } else {
-                this.destination.Add(destination);
+            if (_destinations == null) {
+                _destinations = new List<ISO3Country>();
+                _destinations.Add(destination);
+            }  else {
+                _destinations.Add(destination);
             }
         }
 
-        public void deleteDestination(ISO3Country destination) {
-            if (this.destination != null) {
-                this.destination.Remove(destination);
+        public void deleteDestination(ISO3Country destination){
+            if (_destinations != null) {
+                _destinations.Remove (destination);
             }
         }
 
-        public void deleteDestination() {
-            this.destination = null;
+        public void deleteDestinations(){
+            _destinations = null;
         }
-
+     
         public void addTag(StatusTag tag) {
-
-            if (this.tags == null) {
-                this.tags = new List<StatusTag>();
-                this.tags.Add(tag);
-            } else {
-                this.tags.Add(tag);
+            if (_tags == null) {
+                _tags = new List<StatusTag>();
+                _tags.Add(tag);
+            }  else {
+                _tags.Add(tag);
             }
         }
 
-        public void deleteTag(StatusTag tag) {
-            if (this.tags != null) {
-                this.tags.Remove(tag);
+        public void deletTag(StatusTag tag){
+            if (_tags != null) {
+                _tags.Remove (tag);
             }
         }
 
-        public void deleteTags() {
-            this.tags = null;
+        public void deleteTags(){
+            _tags = null;
         }
 
         public void addField(FieldTracking field) {
-
-            if (this.fields == null) {
-                this.fields = new List<FieldTracking>();
-                this.fields.Add(field);
-            } else {
-                this.fields.Add(field);
+            if (_fields == null) {
+                _fields = new List<FieldTracking>();
+                _fields.Add(field);
+            }  else {
+                _fields.Add(field);
             }
         }
 
-        public void deleteField(FieldTracking field) {
-            if (this.fields != null) {
-                this.fields.Remove(field);
+        public void deletField(FieldTracking field){
+            if (_fields != null) {
+                _fields.Remove (field);
             }
         }
 
-        public void deleteFields() {
-            this.fields = null;
+        public void deleteFields(){
+            _fields = null;
+        }
+      
+        public int page{
+            get { return _page; }
+            set { _page= value; }
         }
 
-        public int getPage() {
-            return page;
+        public int limit{
+            get { return _limit; }
+            set { _limit= value; }
         }
 
-        public void setPage(int page) {
-            this.page = page;
+        public String keyword{
+            get { return _keyword; }
+            set { _keyword= value; }
+        }
+   
+        public DateTime createdAtMin{
+            get { return _createdAtMin; }
+            set { _createdAtMin= value; }
         }
 
-        public int getLimit() {
-            return limit;
+        public DateTime createdAtMax{
+            get { return _createdAtMax; }
+            set { _createdAtMax= value; }
         }
 
-        public void setLimit(int limit) {
-            this.limit = limit;
+        public String lang{
+            get { return _lang; }
+            set { _lang= value; }
         }
 
-        public String getKeyword() {
-            return keyword;
-        }
-
-        public void setKeyword(String keyword) {
-            this.keyword = keyword;
-        }
-
-        public DateTime? getCreatedAtMin() {
-            return createdAtMin;
-        }
-
-        public void setCreatedAtMin(DateTime createdAtMin) {
-            this.createdAtMin = createdAtMin;
-        }
-
-        public DateTime? getCreatedAtMax() {
-            return createdAtMax;
-        }
-
-        public void setCreatedAtMax(DateTime createdAtMax) {
-            this.createdAtMax = createdAtMax;
-        }
-
-        public String getLang() {
-            return lang;
-        }
-
-        public void setLang(String lang) {
-            this.lang = lang;
-        }
-
-        public int getTotal() {
-            return total;
-        }
-
-        public void setTotal(int total) {
-            this.total = total;
+        public int total{
+            get { return _total; }
+            set { _total= value; }
         }
 
         /**
@@ -228,15 +202,15 @@ namespace Aftership{
             if (this.createdAtMax !=  default(DateTime)) qs.add("created_at_max", DateMethods.ToString(this.createdAtMax));
             if (this.lang != null)qs.add("lang", this.lang);
 
-            if (this.slugs != null) qs.add("slug",this.slugs);
+            if (this._slugs != null) qs.add("slug",this._slugs);
 
-            if (this.origin != null) qs.add("origin",  string.Join(",", this.origin));
+            if (this._origins != null) qs.add("origin",  string.Join(",", this._origins));
 
-            if (this.destination != null) qs.add("destination", string.Join(",", this.destination));
+            if (this._destinations != null) qs.add("destination", string.Join(",", this._destinations));
 
-            if (this.tags != null) qs.add("tag", string.Join(",", this.tags));
+            if (this._tags != null) qs.add("tag", string.Join(",", this._tags));
 
-            if (this.fields != null) qs.add("fields", string.Join(",",this.fields));
+            if (this._fields != null) qs.add("fields", string.Join(",",this._fields));
 
             //globalJSON.put("tracking", trackingJSON);
 
