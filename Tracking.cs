@@ -194,6 +194,7 @@ namespace Aftership{
 				}
 			}
 		}
+            
 
 		public String id{
 			get { return _id; }
@@ -412,6 +413,37 @@ namespace Aftership{
 
 			return globalJSON.ToString();
 		}
+
+
+        public String generatePutJSON(){
+            JObject globalJSON = new JObject();
+            JObject trackingJSON = new JObject();
+            JObject customFieldsJSON;
+
+            if (_title != null) trackingJSON.Add("title",new JValue(_title));
+            if (_emails != null) {
+                JArray emailsJSON = new JArray(_emails);
+                trackingJSON["emails"] = emailsJSON;
+            }
+            if (this.smses != null) {
+                JArray smsesJSON = new JArray(_smses);
+                trackingJSON["smses"]= smsesJSON;
+            }
+            if (_customerName != null) trackingJSON.Add("customer_name", new JValue(_customerName));
+            if (_orderID != null) trackingJSON.Add("order_id", new JValue(_orderID));
+            if (_orderIDPath != null) trackingJSON.Add("order_id_path", new JValue (_orderIDPath));
+            if (_customFields != null) {
+                customFieldsJSON = new JObject();
+
+                foreach (KeyValuePair<String, String> pair in _customFields) {
+                    customFieldsJSON.Add(pair.Key, new JValue(pair.Value));
+                }
+                trackingJSON["custom_fields"] = customFieldsJSON;
+            }
+            globalJSON["tracking"] = trackingJSON;
+
+            return globalJSON.ToString();
+        }
 
 		public String getQueryRequiredFields(){
 			bool containsInfo = false;

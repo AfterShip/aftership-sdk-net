@@ -14,6 +14,9 @@ namespace MonoTests.TestConnectionAPI
 	{
 		//remember to change your API Key
         ConnectionAPI connection  = new ConnectionAPI("????-?????-?????-???");
+        static int TOTAL_COURIERS_API = 222;
+
+        String [] couriersDetected={"dpd","fedex"};
 
 		//post tracking number
 		String trackingNumberPost ="05167019264110";
@@ -44,6 +47,9 @@ namespace MonoTests.TestConnectionAPI
 
 		static bool firstTime = true;
 
+        Dictionary <string, string> firstCourier= new  Dictionary<string, string>();
+        Dictionary <string, string> firstCourierAccount= new  Dictionary<string, string>();
+       
 
 		public TestConnectionAPI ()
 		{
@@ -51,12 +57,27 @@ namespace MonoTests.TestConnectionAPI
 
 		[SetUp]		
 		public void setUp(){
-		
 			if(firstTime) {
+                Console.WriteLine ("****************SET-UP BEGIN**************");
 				firstTime=false;
 				//delete the tracking we are going to post (in case it exist)
 				Tracking tracking = new Tracking("05167019264110");
 				tracking.slug = "dpd";
+
+                //first courier
+                firstCourier.Add("slug","india-post-int");
+                firstCourier.Add("name","India Post International");
+                firstCourier.Add("phone","+91 1800 11 2011");
+                firstCourier.Add("other_name","भारतीय डाक, Speed Post & eMO, EMS, IPS Web");
+                firstCourier.Add("web_url","http://www.indiapost.gov.in/");
+
+                //first courier in your account
+                firstCourierAccount.Add("slug","usps");
+                firstCourierAccount.Add("name","USPS");
+                firstCourierAccount.Add("phone","+1 800-275-8777");
+                firstCourierAccount.Add("other_name","United States Postal Service");
+                firstCourierAccount.Add("web_url","https://www.usps.com");
+
 				try {connection.deleteTracking(tracking); } catch (Exception e) {
 					Console.WriteLine("**1"+e.Message);}
 				Tracking tracking1 = new Tracking(trackingNumberToDetect);
@@ -76,11 +97,43 @@ namespace MonoTests.TestConnectionAPI
                         Console.WriteLine("**4"+e.Message);
 
                 }
+                Console.WriteLine ("****************SET-UP FINISH**************");
 
 
 			}
 
 		}
+
+        [Test]
+        public void testDetectCouriers(){
+
+            //get trackings of this number.
+            List<Courier> couriers = connection.detectCouriers(trackingNumberToDetect);
+            Assert.AreEqual( 2, couriers.Count);
+            //the couriers should be dpd or fedex
+            Assert.IsTrue(Equals(couriers[0].slug,couriersDetected[0])
+                || Equals(couriers[1].slug,couriersDetected[0]));
+            Assert.IsTrue(Equals(couriers[0].slug,couriersDetected[1])
+                || Equals(couriersDetected[1],couriers[1].slug));
+
+            //if the trackingNumber doesn't match any courier defined, should give an error.
+
+            try {
+                List<Courier> couriers1 = connection.detectCouriers(trackingNumberToDetectError);
+                Assert.AreEqual (0, couriers1.Count);
+            }catch (Exception e){
+                Assert.AreEqual("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\"}}}", e.Message);
+            }
+
+            List<String> slugs = new List<String>();
+            slugs.Add("dtdc");
+            slugs.Add("ukrposhta");
+            slugs.Add("usps");
+            //   slugs.add("asdfasdfasdfasd");
+            slugs.Add("dpd");
+            List<Courier> couriers2 = connection.detectCouriers(trackingNumberToDetect,"28046","",null,slugs);
+            Assert.AreEqual(1, couriers2.Count);
+        }
 
 		[Test]
 		public void TestCreateTracking() {
@@ -191,8 +244,8 @@ namespace MonoTests.TestConnectionAPI
 
 		[Test]
 		public void testGetTrackingByNumber(){
-			String trackingNumber = "RC328021065CN";
-			String slug = "canada-post";
+            String trackingNumber = "RR814001189ES";
+			String slug = "spain-correos-es";
 
 			Tracking trackingGet1 = new Tracking(trackingNumber);
 			trackingGet1.slug = slug;
@@ -200,15 +253,15 @@ namespace MonoTests.TestConnectionAPI
 			Tracking tracking = connection.getTrackingByNumber(trackingGet1);
 			Assert.AreEqual(trackingNumber, tracking.trackingNumber,"#A23");
 			Assert.AreEqual( slug, tracking.slug,"#A24");
-			Assert.AreEqual( "Lettermail", tracking.shipmentType,"#A25");
+			Assert.AreEqual( null, tracking.shipmentType,"#A25");
 
 			List <Checkpoint> checkpoints = tracking.checkpoints;
 			Checkpoint lastCheckpoint = checkpoints [checkpoints.Count - 1];
 			Assert.IsTrue (checkpoints!=null,"A25-1");
-			Assert.AreEqual (10 , checkpoints.Count,"A25-2");
+			Assert.AreEqual (6 , checkpoints.Count,"A25-2");
 
-			Assert.AreEqual ("Item successfully delivered" ,lastCheckpoint.message,"A25-3");
-			Assert.AreEqual ("VARENNES" ,lastCheckpoint.countryName,"A25-4");
+            Assert.AreEqual ("Salida de la Oficina Internacional de origen" ,lastCheckpoint.message,"A25-3");
+            Assert.AreEqual ("Spain" ,lastCheckpoint.countryName,"A25-4");
 
 
 		}
@@ -251,10 +304,10 @@ namespace MonoTests.TestConnectionAPI
 			List<FieldTracking> fields = new List<FieldTracking>();
 			fields.Add(FieldTracking.tracking_number);
 			fields.Add(FieldTracking.active);
-			Tracking trackingGet1 = new Tracking("RC328021065CN");
-			trackingGet1.slug = "canada-post";
+            Tracking trackingGet1 = new Tracking("RR814001189ES");
+			trackingGet1.slug = "spain-correos-es";
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1,fields,"");
-			Assert.AreEqual( "RC328021065CN", tracking3.trackingNumber,"#A30");
+            Assert.AreEqual( "RR814001189ES", tracking3.trackingNumber,"#A30");
 			Assert.AreEqual( null, tracking3.title,"#A31");
 			Assert.AreEqual( null, tracking3.slug,"#A32");
 			Assert.AreEqual( null, tracking3.checkpoints,"#A33");
@@ -275,9 +328,9 @@ namespace MonoTests.TestConnectionAPI
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1,fields,"");
 
-		//	Assert.AreEqual("53bb4db6dcebe7242fe3283e", tracking3.id,"#B1");
+            Assert.AreEqual("53cf265d3dd72435213fa015", tracking3.id,"#B1");
 			Assert.AreEqual( "api",tracking3.source,"#B2");
-			Assert.IsNull(  tracking3.title,"#B3");
+			Assert.IsNull( tracking3.title,"#B3");
 
 		}
 
@@ -290,25 +343,25 @@ namespace MonoTests.TestConnectionAPI
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
 
-		//	Assert.AreEqual("53be255bfdacaaae7b178345", tracking3.id,"#C1");
+			Assert.AreEqual("53be255bfdacaaae7b178345", tracking3.id,"#C1");
 			Assert.AreEqual( "Zyg7Iem1x",tracking3.uniqueToken,"#C2");
 
 		}
 
-//		[Test]
-//		public void testGetTrackingByNumber7(){
-//			//courier require postalCode
-//			Tracking trackingGet1 = new Tracking("RT406182863DE");
-//			trackingGet1.slug = "deutsch-post";
-//			trackingGet1.trackingShipDate = "20140627";
-//
-//			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
-//
-//	//		Assert.AreEqual("53be255bfdacaaae7b17834b", tracking3.id,"#D1");
-//			Assert.AreEqual( true,tracking3.active,"#D2");
-//
-//		}
-//
+		[Test]
+		public void testGetTrackingByNumber7(){
+			//courier require postalCode
+			Tracking trackingGet1 = new Tracking("RT406182863DE");
+			trackingGet1.slug = "deutsch-post";
+			trackingGet1.trackingShipDate = "20140627";
+
+			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
+
+            Assert.AreEqual("54389b1328e9f0272ecc2513", tracking3.id,"#D1");
+			Assert.AreEqual( false,tracking3.active,"#D2");
+
+		}
+
 		[Test]
 		public void testGetTrackingByNumber8(){
 			//courier require by id (not need string)
@@ -327,11 +380,11 @@ namespace MonoTests.TestConnectionAPI
 		public void testGetTrackingByNumber9(){
 			//courier require postalCode
 			Tracking trackingGet1 = new Tracking("");
-			trackingGet1.id = "53be255bfdacaaae7b17834b";
+            trackingGet1.id = "54389b1328e9f0272ecc2513";
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
 
-			Assert.AreEqual("RT406182863DE", tracking3.trackingNumber,"#F1");
+            Assert.AreEqual("RT406182863DE", tracking3.trackingNumber,"#F1");
 			Assert.AreEqual( "20140627",tracking3.trackingShipDate,"#F2");
 
 		}
@@ -345,7 +398,7 @@ namespace MonoTests.TestConnectionAPI
             Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
 
             Assert.AreEqual("Priority Mail 2-Day&#153;", tracking3.shipmentType,"#C1");
-//            Assert.AreEqual( "3",tracking3.expectedDelivery,"#C2");
+            Assert.AreEqual( null,tracking3.expectedDelivery,"#C2");
 
         }
 
@@ -368,10 +421,7 @@ namespace MonoTests.TestConnectionAPI
             for (i = 0; i < listTrackings.Count; i++) {
                 listTrackings [i].ToString ();
             }
-//  
-//            Assert.AreEqual("First-Class Package Service", tracking3.shipmentType,"#C1");
-//            Assert.AreEqual( "Shipping Label Created",tracking3.checkpoints[0].message,"#C2");
-
+  
         }
         [Test]
         public void testGetLastCheckpointID(){
@@ -407,8 +457,7 @@ namespace MonoTests.TestConnectionAPI
             fields.Add(FieldCheckpoint.message);
             Tracking trackingGet1 = new Tracking("whatever");
             trackingGet1.id = "53d1e35405e166704ea8adb9";
-            //        trackingGet1.setSlug("arrowxl");
-            //        trackingGet1.setTrackingPostalCode("BB102PN");
+
 
             Checkpoint newCheckpoint1 = connection.getLastCheckpoint(trackingGet1,fields,"");
             Assert.AreEqual("Network movement commenced", newCheckpoint1.message);
@@ -421,69 +470,190 @@ namespace MonoTests.TestConnectionAPI
 
             //get the first 100 Trackings
             List<Tracking> listTrackings100 = connection.getTrackings(1);
-            // Assert.assertEquals("Should receive 100", 100, listTrackings100.size());
+           // Assert.AreEqual(10, listTrackings100.Count);
+            //at least we have 10 elements
             Assert.IsNotNullOrEmpty(listTrackings100[0].ToString());
-            Assert.IsNotNullOrEmpty(listTrackings100[15].ToString());
+            Assert.IsNotNullOrEmpty(listTrackings100[10].ToString());
 
      
         }
 
-       [Test]
-        public void testGetTracking2(){
+        [Test]
+        public void testPutTracking(){
+            Tracking tracking = new Tracking("868271682145");
+            tracking.slug = "sto";
+            tracking.title = "another title";
+
+            Tracking tracking2 = connection.putTracking(tracking);
+            Assert.AreEqual("another title", tracking2.title);
+
+            //test post tracking number doesn't exist
+            Tracking tracking3 = new Tracking(trackingNumberToDetectError);
+            tracking3.title ="another title";
+
+            try{
+                connection.putTracking(tracking3);
+                //always should give an exception before this
+                Assert.AreEqual("This never should be executed",false);
+            }catch (Exception e){
+                Assert.AreEqual("{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//asdq\"}}", e.Message);
+            }
+        }
+
+        [Test]
+        public void testGetAllCouriers(){
+
+            List<Courier> couriers = connection.getAllCouriers();
+
+            //check first courier
+            Assert.AreEqual( firstCourier["slug"], couriers[0].slug);
+            Assert.AreEqual( firstCourier["name"], couriers[0].name);
+            Assert.AreEqual( firstCourier["phone"], couriers[0].phone);
+            Assert.AreEqual( firstCourier["other_name"], couriers[0].other_name);
+            Assert.AreEqual(firstCourier["web_url"], couriers[0].web_url);
+            //total Couriers returned
+            Assert.AreEqual( TOTAL_COURIERS_API, couriers.Count);
+            //try to acces with a bad API Key
+            ConnectionAPI connectionBadKey = new ConnectionAPI("badKey");
+
+            try{
+                connectionBadKey.getCouriers();
+            }catch (Exception e){
+                Assert.AreEqual("{\"meta\":{\"code\":401,\"message\":\"Invalid API key.\",\"type\":\"Unauthorized\"},\"data\":{}}", e.Message);
+            }
+        }
+
+        [Test]
+        public void testGetCouriers(){
+
+            List<Courier> couriers = connection.getCouriers();
+            //total Couriers returned
+            Assert.AreEqual(11, couriers.Count);
+            //check first courier
+            Assert.AreEqual(firstCourierAccount["slug"], couriers[0].slug);
+            Assert.AreEqual(firstCourierAccount["name"], couriers[0].name);
+            Assert.AreEqual(firstCourierAccount["phone"], couriers[0].phone);
+            Assert.AreEqual(firstCourierAccount["other_name"], couriers[0].other_name);
+            Assert.AreEqual(firstCourierAccount["web_url"], couriers[0].web_url);
+
+            //try to acces with a bad API Key
+            ConnectionAPI connectionBadKey = new ConnectionAPI("badKey");
+
+            try{
+                connectionBadKey.getCouriers();
+            }catch (Exception e){
+                Assert.AreEqual("{\"meta\":{\"code\":401,\"message\":\"Invalid API key.\",\"type\":\"Unauthorized\"},\"data\":{}}", e.Message);
+            }
+
+        }
+
+        [Test]
+        public void testGetTrackings_A(){
+
             ParametersTracking parameters = new ParametersTracking();
-//            parameters.addSlug("dhl");
-//            DateTime date = DateTime.Today.AddMonths(-1);
-//         
-//           
-//            parameters.setCreatedAtMin (date);
-//            List<Tracking> totalDHL = connection.getTrackings(parameters);
-//            Assert.AreEqual(1, totalDHL.Count);
+            parameters.addSlug("dhl");
+            DateTime date = DateTime.Today.AddMonths(-1);
+
+
+            parameters.setCreatedAtMin (date);
+            parameters.setLimit(50);
+
+            List<Tracking> totalDHL = connection.getTrackings(parameters);
+            Assert.AreEqual(2, totalDHL.Count);
+        }
+
+        [Test]
+        public void testGetTrackings_B(){
 
             ParametersTracking param1 = new ParametersTracking();
             param1.addDestination(ISO3Country.DEU);
             param1.setLimit(20);
             List<Tracking> totalSpain =connection.getTrackings(param1);
             Assert.AreEqual(1, totalSpain.Count);
+        }
 
-
+        [Test]
+        public void testGetTrackings_C(){
             ParametersTracking param2 = new ParametersTracking();
-            param2.addTag(StatusTag.Pending);
-            List<Tracking> totalOutDelivery=connection.getTrackings(param2);
-            //Assert.AreEqual( 2, totalOutDelivery.Count);
+            param2.addTag(StatusTag.Delivered);
+            param2.setLimit(50);
 
+            List<Tracking> totalOutDelivery=connection.getTrackings(param2);
+            Assert.AreEqual( 4, totalOutDelivery.Count);
+
+        }
+
+        [Test]
+        public void testGetTrackings_D(){
             ParametersTracking param3 = new ParametersTracking();
-            param3.setLimit(195);
+            param3.setLimit(50);
             List<Tracking> totalOutDelivery1=connection.getTrackings(param3);
-          //  Assert.AreEqual( 17, totalOutDelivery1.Count);
+            Assert.AreEqual( 18, totalOutDelivery1.Count);
+        }
+
+        [Test]
+        public void testGetTrackings_E(){
 
             ParametersTracking param4 = new ParametersTracking();
             param4.setKeyword("title");
             param4.addField(FieldTracking.title);
-            List<Tracking> totalOutDelivery2=connection.getTrackings(param4);
-  //          Assert.AreEqual( 2, totalOutDelivery2.Count);
-            Assert.AreEqual( "title", totalOutDelivery2[0].title);
+            param4.setLimit(50);
 
+            List<Tracking> totalOutDelivery2=connection.getTrackings(param4);
+          //  Assert.AreEqual( 2, totalOutDelivery2.Count);
+            Assert.AreEqual( "this title", totalOutDelivery2[0].title);
+        }
+
+        [Test]
+        public void testGetTrackings_F(){
 
             ParametersTracking param5 = new ParametersTracking();
             param5.addField(FieldTracking.tracking_number);
+            //param5.setLimit(50);
+
             List<Tracking> totalOutDelivery3=connection.getTrackings(param5);
             Assert.AreEqual( null, totalOutDelivery3[0].title);
+        }
+        [Test]
+        public void testGetTrackings_G(){
 
-//            ParametersTracking param6 = new ParametersTracking();
-//            param6.addField(FieldTracking.tracking_number);
-//            param6.addField(FieldTracking.title);
-//            param6.addField(FieldTracking.checkpoints);
-//            param6.addField(FieldTracking.order_id);
-//            param6.addField(FieldTracking.tag);
-//            param6.addField(FieldTracking.order_id);
-//            List<Tracking> totalOutDelivery4=connection.getTrackings(param6);
-//            Assert.AreEqual( null, totalOutDelivery4[0].slug);
-//
-//            ParametersTracking param7 = new ParametersTracking();
-//            param7.addOrigin(ISO3Country.ESP);
-//            List<Tracking> totalOutDelivery5=connection.getTrackings(param7);
-//            Assert.AreEqual(8, totalOutDelivery5.Count);
+            ParametersTracking param6 = new ParametersTracking();
+            param6.addField(FieldTracking.tracking_number);
+            param6.addField(FieldTracking.title);
+            param6.addField(FieldTracking.checkpoints);
+            param6.addField(FieldTracking.order_id);
+            param6.addField(FieldTracking.tag);
+            param6.addField(FieldTracking.order_id);
+            //param6.setLimit(50);
 
+            List<Tracking> totalOutDelivery4=connection.getTrackings(param6);
+            Assert.AreEqual( null, totalOutDelivery4[0].slug);
+        }
+        [Test]
+        public void testGetTrackings_H(){
+        
+            ParametersTracking param7 = new ParametersTracking();
+            param7.addOrigin(ISO3Country.ESP);
+           // param7.setLimit(50);
+
+            List<Tracking> totalOutDelivery5=connection.getTrackings(param7);
+            Assert.AreEqual(2, totalOutDelivery5.Count);
+        }
+  
+        [Test]
+        public void testRetrack(){
+
+            Tracking tracking = new Tracking("RT224265042HK");
+            tracking.slug = "hong-kong-post";
+            try{
+                connection.retrack(tracking);
+                Assert.IsTrue(false);
+
+            }catch (Exception e){
+                Assert.IsTrue(e.Message.Contains("4016"));
+                Assert.IsTrue(e.Message.Contains("Retrack is not allowed. You can only retrack each shipment once."));
+
+            }
         }
 	}
 }

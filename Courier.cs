@@ -8,25 +8,25 @@ namespace Aftership
     public class Courier
     {
         /** Unique code of courier */
-        private String slug;
+        private String _slug;
         /** Name of courier */
-        private String name;
+        private String _name;
         /** Contact phone number of courier */
-        private String phone;
+        private String _phone;
         /** Other name of courier, if several they will be separated by commas */
-        private String other_name;
+        private String _other_name;
         /** Website link of courier */
-        private String web_url;
+        private String _web_url;
         /** Require fields for this courier */
-        private List<String> requireFields;
+        private List<String> _requireFields;
 
         /** Default constructor with all the fields of the class */
         public Courier(String web_url, String slug, String name, String phone, String other_name) {
-            this.web_url = web_url;
-            this.slug = slug;
-            this.name = name;
-            this.phone = phone;
-            this.other_name = other_name;
+            this._web_url = web_url;
+            this._slug = slug;
+            this._name = name;
+            this._phone = phone;
+            this._other_name = other_name;
         }
 
         /**
@@ -38,17 +38,17 @@ namespace Aftership
      **/           // _trackingNumber = trackingJSON["tracking_number"]==null?null:(String)trackingJSON["tracking_number"];
 
         public Courier(JObject jsonCourier){
-            this.web_url = jsonCourier["web_url"]==null?null:(String)jsonCourier["web_url"];
-            this.slug =  jsonCourier["slug"]==null?null:(String)jsonCourier["slug"];
-            this.name = jsonCourier["name"]==null?null:(String)jsonCourier["name"];
-            this.phone = jsonCourier["phone"]==null?null:(String)jsonCourier["phone"];
-            this.other_name = jsonCourier["other_name"]==null?null:(String)jsonCourier["other_name"];
+            this._web_url = jsonCourier["web_url"]==null?null:(String)jsonCourier["web_url"];
+            this._slug =  jsonCourier["slug"]==null?null:(String)jsonCourier["slug"];
+            this._name = jsonCourier["name"]==null?null:(String)jsonCourier["name"];
+            this._phone = jsonCourier["phone"]==null?null:(String)jsonCourier["phone"];
+            this._other_name = jsonCourier["other_name"]==null?null:(String)jsonCourier["other_name"];
 
             JArray requireFieldsArray =jsonCourier["required_fields"]==null?null:(JArray)jsonCourier["required_fields"];
             if(requireFieldsArray !=null && requireFieldsArray.Count !=0){
-                this.requireFields = new List <String>();
+                this._requireFields = new List <String>();
                 for (int i=0;i<requireFieldsArray.Count;i++){
-                    this.requireFields.Add(requireFieldsArray[i].ToString());
+                    this._requireFields.Add(requireFieldsArray[i].ToString());
                 }
             }
 
@@ -56,76 +56,60 @@ namespace Aftership
 
         public String TooString() {
             return "Courier{" +
-                "slug='" + slug + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", other_name='" + other_name + '\'' +
-                ", web_url='" + web_url + '\'' +
+                "slug='" + _slug + '\'' +
+                ", name='" + _name + '\'' +
+                ", phone='" + _phone + '\'' +
+                ", other_name='" + _other_name + '\'' +
+                ", web_url='" + _web_url + '\'' +
                 '}';
         }
 
-        public String getSlug() {
-            return slug;
+        public String slug{
+            get { return _slug; }
+            set { _slug = value; }
+        }
+        public String name{
+            get { return _name; }
+            set { _name = value; }
+        }
+        public String phone{
+            get { return _phone; }
+            set { _phone= value; }
+        }
+        public String other_name{
+            get { return _other_name; }
+            set { _other_name= value; }
+        }   
+            
+        public String web_url{
+            get { return _web_url; }
+            set { _web_url= value; }
         }
 
-        public void setSlug(String slug) {
-            this.slug = slug;
+        public List<String> requireFields{
+            get { return _requireFields; }
+            set { _requireFields = value; }
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        public String getOther_name() {
-            return other_name;
-        }
-
-        public void setOther_name(String other_name) {
-            this.other_name = other_name;
-        }
-
-        public String getWeb_url() {
-            return web_url;
-        }
-
-        public void setWeb_url(String web_url) {
-            this.web_url = web_url;
-        }
-
-        public List<String> getRequireFields() {
-            return this.requireFields;
-        }
-
-        public void addRequierField(String requierField) {
-
-            if (this.requireFields == null) {
-                this.requireFields = new List<String>();
-                this.requireFields.Add(requierField);
-            } else
-                this.requireFields.Add(requierField);
-        }
-
-        public void deleteRequierField(String requierField) {
-            if (this.requireFields != null) {
-                this.requireFields.Remove(requierField);
+        public void addRequireField(String requierField) {
+            if (_requireFields == null) {
+                _requireFields = new List<String>();
+                _requireFields.Add(requierField);
+            }  else {
+                _requireFields.Add(requierField);
             }
         }
 
-        public void deleteRequierFields() {
-            this.requireFields = null;
+        public void deleteRequireField(String requireField){
+            if (_requireFields != null) {
+                _requireFields.Remove (requireField);
+            }
         }
+
+        public void deleteRequireFields(){
+            _requireFields = null;
+        }
+  
     }
 }
 

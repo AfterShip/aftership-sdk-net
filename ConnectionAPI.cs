@@ -31,6 +31,30 @@ namespace Aftership
         }
 
         /// <summary>
+        /// Updates a tracking of your account
+        /// </summary>
+        /// <param name="tracking">  A Tracking object with the information to update
+        ///                The fields trackingNumber and slug SHOULD be informed, otherwise an exception will be thrown
+        ///               The fields an user can update are: smses, emails, title, customerName, orderID, orderIDPath,
+        ///               customFields</param>
+        /// <returns>The last Checkpoint object</returns>
+        public Tracking putTracking(Tracking tracking){
+
+            String parametersExtra="";
+            if(tracking.id!=null && !(tracking.id.CompareTo("")==0)){
+                parametersExtra = tracking.id;
+            }else {
+                String paramRequiredFields = this.replaceFirst(tracking.getQueryRequiredFields(),"&", "?");
+                parametersExtra = tracking.slug +"/"+tracking.trackingNumber+paramRequiredFields;
+            }
+
+
+            JObject response = this.request("PUT", "/trackings/"+parametersExtra, tracking.generatePutJSON());
+
+            return new Tracking((JObject)response["data"]["tracking"]);
+
+        }
+        /// <summary>
         /// Return the tracking information of the last checkpoint of a single tracking
         /// </summary>
         /// <param name="tracking"> A Tracking to get the last checkpoint of, it should have tracking number and slug at least</param>
@@ -228,9 +252,9 @@ namespace Aftership
             // trackingJSON.Add("slug",new JValue(_slug));
 
             if (trackingNumber == null || trackingNumber.Equals(""))
-                throw  new System.ArgumentException("the tracking number should be always informed for the method detectCouriers");
+                throw  new System.ArgumentException("The tracking number should be always informed for the method detectCouriers");
             tracking.Add("tracking_number",new JValue(trackingNumber));
-            body.Add("tracking",new JValue(tracking));
+            body.Add("tracking",tracking);
             JObject response = this.request("POST","/couriers/detect",body.ToString());
             List<Courier> couriers = new List<Courier>();
 
@@ -278,10 +302,10 @@ namespace Aftership
 
             if (slugs != null && slugs.Count!=0) {
                 JArray slugsJSON = new JArray(slugs);
-                tracking.Add("slug", new JValue(slugsJSON));
+                tracking.Add("slug", slugsJSON);
             }
 
-            body.Add("tracking",new JValue(tracking));
+            body.Add("tracking",tracking);
 
             JObject response = this.request("POST","/couriers/detect",body.ToString());
             List<Courier> couriers = new List<Courier>();
@@ -443,22 +467,22 @@ namespace Aftership
 		/// 
 		public JObject request(String method, String urlResource, String body)
         {
+           // Console.WriteLine ("Start Request "+DateTime.Now);
 			string url = URL_SERVER  + VERSION_API + urlResource;
 			string json_response = "";
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 
             request.Timeout = 150000;
-//            request.Timeout = 1;
             WebHeaderCollection header = new WebHeaderCollection();
             header.Add("aftership-api-key", _tokenAftership);
             request.Headers = header;
 			request.ContentType = "application/json";
 			request.Method = method;
-			Console.WriteLine(" Requesting the URL :"+ url);
+			//Console.WriteLine(method+" Requesting the URL :"+ url);
 
 			if(body!=null){
-
+                //Console.WriteLine ("body: " + body);
 				//is a POST or PUT  
 				using (var streamWriter = new StreamWriter(request.GetRequestStream()))
 				{
@@ -493,8 +517,11 @@ namespace Aftership
 				}
 
 			}catch(Exception e){
-				throw e;
-			}
+                throw e;
+            }
+//            }finally{
+//                Console.WriteLine ("Finish Request "+DateTime.Now);
+//            }
 //            Console.WriteLine ("Response request: "+json_response+"*");
 			return JObject.Parse(json_response);;
         }
