@@ -144,18 +144,9 @@ namespace Aftership{
 					_emails.Add((String)emailsArray[i]);
 				}
 			}
-
-
-
-			JObject customFieldsJSON =trackingJSON["custom_fields"]==null?null:
-				(JObject)trackingJSON["custom_fields"];
-
-//			if(customFieldsJSON!=null){
-//				_customFields = new Dictionary<String, String>();
-//				foreach (var item in customFieldsJSON) {
-//					_customFields.Add (item.Key, (String)item.Value);
-//				}
-//			}
+              
+            JObject customFieldsJSON = trackingJSON["custom_fields"]==null || !trackingJSON["custom_fields"].HasValues ?null:
+                (JObject)trackingJSON["custom_fields"];
 
 			if(customFieldsJSON!=null){
 				_customFields = new Dictionary<String, String>();

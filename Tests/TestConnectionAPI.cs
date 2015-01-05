@@ -13,8 +13,8 @@ namespace MonoTests.TestConnectionAPI
 	public class TestConnectionAPI
 	{
 		//remember to change your API Key
-        ConnectionAPI connection  = new ConnectionAPI("???????-????-????????");
-        static int TOTAL_COURIERS_API = 222;
+        ConnectionAPI connection  = new ConnectionAPI("9b98faf2-3cc4-4694-beb4-fffebc489c84");
+        static int TOTAL_COURIERS_API = 225;
 
         String [] couriersDetected={"dpd","fedex"};
 
@@ -111,6 +111,9 @@ namespace MonoTests.TestConnectionAPI
             List<Courier> couriers = connection.detectCouriers(trackingNumberToDetect);
             Assert.AreEqual( 2, couriers.Count);
             //the couriers should be dpd or fedex
+            Console.WriteLine ("**0" + couriers [0].slug);
+            Console.WriteLine ("**1" + couriers [1].slug);
+
             Assert.IsTrue(Equals(couriers[0].slug,couriersDetected[0])
                 || Equals(couriers[1].slug,couriersDetected[0]));
             Assert.IsTrue(Equals(couriers[0].slug,couriersDetected[1])
@@ -277,6 +280,7 @@ namespace MonoTests.TestConnectionAPI
 				//always should give an exception before this
 				Assert.IsTrue(false,"#A26");
 			}catch (Exception e){
+                Console.WriteLine (e.Message);
 				Assert.AreEqual("{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//RC328021065CN\"}}",
 					e.Message,"#A27");
 			}
@@ -316,9 +320,9 @@ namespace MonoTests.TestConnectionAPI
 		[Test]
 		public void testGetTrackingByNumber5(){
 			//courier require postalCode
-			Tracking trackingGet1 = new Tracking("8W9JM0014847A094");
+            Tracking trackingGet1 = new Tracking("802800042624A");
 			trackingGet1.slug = "arrowxl";
-			trackingGet1.trackingPostalCode = "BB102PN";
+            trackingGet1.trackingPostalCode = "EN87QZ";
 			List<FieldTracking> fields = new List<FieldTracking>();
 			fields.Add(FieldTracking.id);
 
@@ -328,8 +332,8 @@ namespace MonoTests.TestConnectionAPI
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1,fields,"");
 
-            Assert.AreEqual("53cf265d3dd72435213fa015", tracking3.id,"#B1");
-			Assert.AreEqual( "api",tracking3.source,"#B2");
+            Assert.AreEqual("54aa042068a73e7e3970493f", tracking3.id,"#B1");
+			Assert.AreEqual( "web",tracking3.source,"#B2");
 			Assert.IsNull( tracking3.title,"#B3");
 
 		}
@@ -337,14 +341,15 @@ namespace MonoTests.TestConnectionAPI
 		[Test]
 		public void testGetTrackingByNumber6(){
 			//courier require postalCode
-			Tracking trackingGet1 = new Tracking("20098147105");
+            Tracking trackingGet1 = new Tracking("20295932248");
 			trackingGet1.slug = "dynamic-logistics";
-			trackingGet1.trackingAccountNumber = "159484";
+            trackingGet1.trackingAccountNumber = "159484";
+            Console.WriteLine("test6  ");
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
 
-			Assert.AreEqual("53be255bfdacaaae7b178345", tracking3.id,"#C1");
-			Assert.AreEqual( "Zyg7Iem1x",tracking3.uniqueToken,"#C2");
+            Assert.AreEqual("54a3ca5ef015021706dd9048", tracking3.id,"#C1");
+            Assert.AreEqual( "bJlNB_DoA_",tracking3.uniqueToken,"#C2");
 
 		}
 
@@ -366,14 +371,14 @@ namespace MonoTests.TestConnectionAPI
 		public void testGetTrackingByNumber8(){
 			//courier require by id (not need string)
 			Tracking trackingGet1 = new Tracking("");
-			trackingGet1.id = "53be255bfdacaaae7b178345";
+            trackingGet1.id = "54a3ca5ef015021706dd9048";
 
 			trackingGet1.trackingAccountNumber = "159484";
 
 			Tracking tracking3 = connection.getTrackingByNumber(trackingGet1);
 
-			Assert.AreEqual("20098147105", tracking3.trackingNumber,"#E1");
-			Assert.AreEqual( "159484",tracking3.trackingAccountNumber,"#E2");
+            Assert.AreEqual("20295932248", tracking3.trackingNumber,"#E1");
+            Assert.AreEqual( "159484",tracking3.trackingAccountNumber,"#E2");
 		}
 
 		[Test]
@@ -426,11 +431,11 @@ namespace MonoTests.TestConnectionAPI
         [Test]
         public void testGetLastCheckpointID(){
             Tracking trackingGet1 = new Tracking("whatever");
-            trackingGet1.id = "53d1e35405e166704ea8adb9";
+            trackingGet1.id = "54a61aa9696b426420baf2ee";
             Checkpoint newCheckpoint = connection.getLastCheckpoint(trackingGet1);
-            Assert.AreEqual( "Network movement commenced", newCheckpoint.message);
-            Assert.AreEqual( "WIGAN HUB", newCheckpoint.countryName);
-            Assert.AreEqual( "InTransit", newCheckpoint.tag);
+            Assert.AreEqual( "Delivered", newCheckpoint.message);
+            Assert.AreEqual(  null, newCheckpoint.countryName);
+            Assert.AreEqual( "Delivered", newCheckpoint.tag);
         }
 
         [Test]
@@ -438,17 +443,17 @@ namespace MonoTests.TestConnectionAPI
             List<FieldCheckpoint> fields = new List<FieldCheckpoint>();
             fields.Add(FieldCheckpoint.message);
             Tracking trackingGet1 = new Tracking("whatever");
-            trackingGet1.id = "53d1e35405e166704ea8adb9";
+            trackingGet1.id = "54a61265696b426420bae98f";
 
             Checkpoint newCheckpoint1 = connection.getLastCheckpoint(trackingGet1,fields,"");
-            Assert.AreEqual( "Network movement commenced", newCheckpoint1.message);
+            Assert.AreEqual( "Delivered", newCheckpoint1.message);
             Assert.AreEqual("0001-01-01T00:00:00+00:00",DateMethods.ToString(newCheckpoint1.createdAt));
 
             fields.Add(FieldCheckpoint.created_at);
 //            System.out.println("list:"+fields.toString());
             Checkpoint newCheckpoint2 = connection.getLastCheckpoint(trackingGet1,fields,"");
-            Assert.AreEqual( "Network movement commenced", newCheckpoint2.message);
-            Assert.AreEqual("2014-07-25T04:55:49+00:00", DateMethods.ToString(newCheckpoint2.createdAt));
+            Assert.AreEqual( "Delivered", newCheckpoint2.message);
+            Assert.AreEqual("2015-01-02T03:37:10+00:00", DateMethods.ToString(newCheckpoint2.createdAt));
         }
 
         [Test]
@@ -456,11 +461,11 @@ namespace MonoTests.TestConnectionAPI
             List<FieldCheckpoint> fields = new List<FieldCheckpoint>();
             fields.Add(FieldCheckpoint.message);
             Tracking trackingGet1 = new Tracking("whatever");
-            trackingGet1.id = "53d1e35405e166704ea8adb9";
+            trackingGet1.id = "54a60ccd45551a97258b4fef";
 
 
             Checkpoint newCheckpoint1 = connection.getLastCheckpoint(trackingGet1,fields,"");
-            Assert.AreEqual("Network movement commenced", newCheckpoint1.message);
+            Assert.AreEqual("Arrived at DTDC Facility", newCheckpoint1.message);
 
         }
 
@@ -528,7 +533,7 @@ namespace MonoTests.TestConnectionAPI
 
             List<Courier> couriers = connection.getCouriers();
             //total Couriers returned
-            Assert.AreEqual(11, couriers.Count);
+            Assert.AreEqual(14, couriers.Count);
             //check first courier
             Assert.AreEqual(firstCourierAccount["slug"], couriers[0].slug);
             Assert.AreEqual(firstCourierAccount["name"], couriers[0].name);
@@ -559,7 +564,7 @@ namespace MonoTests.TestConnectionAPI
             parameters.limit = 50;
 
             List<Tracking> totalDHL = connection.getTrackings(parameters);
-            Assert.AreEqual(2, totalDHL.Count);
+            Assert.AreEqual(1, totalDHL.Count);
         }
 
         [Test]
@@ -579,7 +584,7 @@ namespace MonoTests.TestConnectionAPI
             param2.limit = 50;
 
             List<Tracking> totalOutDelivery=connection.getTrackings(param2);
-            Assert.AreEqual( 4, totalOutDelivery.Count);
+            Assert.AreEqual( 11, totalOutDelivery.Count);
 
         }
 
@@ -588,7 +593,7 @@ namespace MonoTests.TestConnectionAPI
             ParametersTracking param3 = new ParametersTracking();
             param3.limit = 50;
             List<Tracking> totalOutDelivery1=connection.getTrackings(param3);
-            Assert.AreEqual( 18, totalOutDelivery1.Count);
+            Assert.AreEqual( 19, totalOutDelivery1.Count);
         }
 
         [Test]
