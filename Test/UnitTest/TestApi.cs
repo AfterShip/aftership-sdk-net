@@ -11,7 +11,7 @@ namespace Test
     {
 
         //remember to change your API Key
-        ConnectionAPI connection = new ConnectionAPI("9b98faf2-3cc4-4694-beb4-fffebc489c84");
+        ConnectionAPI connection = new ConnectionAPI("9b98faf2-1111-1111-1111-1111111111111");
         //static int TOTAL_COURIERS_API = 225;
 
         String[] couriersDetected = { "dpd", "fedex" };
