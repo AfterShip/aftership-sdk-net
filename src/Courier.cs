@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace Aftership
+namespace AftershipAPI
 {
     public class Courier
     {

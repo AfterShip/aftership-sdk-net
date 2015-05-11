@@ -5,9 +5,9 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using Aftership.Enums;
+using AftershipAPI.Enums;
 
-namespace Aftership
+namespace AftershipAPI
 {
 	/// <summary>
 	/// Connection API. Connect with the API of Afthership
@@ -94,7 +94,7 @@ namespace Aftership
 
             String parameters = null;
             QueryString qs = new QueryString();
-
+            
             if (fields!=null) qs.add("fields", string.Join(",",fields));
             if (lang!=null && !lang.Equals("")) qs.add("lang",lang);
             parameters = this.replaceFirst( qs.ToString(),"&","?");
@@ -480,10 +480,10 @@ namespace Aftership
             request.Headers = header;
 			request.ContentType = "application/json";
 			request.Method = method;
-//			Console.WriteLine(method+" Requesting the URL :"+ url);
+			Console.WriteLine(method+" Requesting the URL :"+ url);
 
 			if(body!=null){
-                //Console.WriteLine ("body: " + body);
+                Console.WriteLine ("body: " + body);
 				//is a POST or PUT  
 				using (var streamWriter = new StreamWriter(request.GetRequestStream()))
 				{

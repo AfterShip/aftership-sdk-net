@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Aftership.Enums;
+using AftershipAPI.Enums;
 
-namespace Aftership{
+namespace AftershipAPI
+{
     /**
  * Keep the information for get trackings from the server, and interact with the results
  * Created by User on 13/6/14.

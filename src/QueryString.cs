@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Web;
 using System.Collections.Generic;
-using Aftership.Enums;
+using AftershipAPI.Enums;
 
-namespace Aftership
+namespace AftershipAPI
 {
 
 	/// <summary>
@@ -34,9 +33,9 @@ namespace Aftership
 		}
 
 		private void encode(String name, String value) {
-			query +=  HttpUtility.UrlEncode(name);
+            query +=  System.Uri.EscapeDataString(name);
 			query += "=";
-			query +=  HttpUtility.UrlEncode(value);
+            query +=  System.Uri.EscapeDataString(value);
 		}
 
 		public String getQuery() {

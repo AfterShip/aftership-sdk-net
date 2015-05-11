@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aftership.Enums
+namespace AftershipAPI.Enums
 {
 	public enum StatusTag
 	{

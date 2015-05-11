@@ -1,9 +1,9 @@
 ﻿using System;
-using Aftership.Enums;
+using AftershipAPI.Enums;
 using Newtonsoft.Json.Linq;
 
 
-namespace Aftership
+namespace AftershipAPI
 {
 	public class Checkpoint
 	{

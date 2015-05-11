@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aftership
+namespace AftershipAPI
 {
     public class DateMethods
     {

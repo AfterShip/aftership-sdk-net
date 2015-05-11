@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
-using Aftership.Enums;
+using AftershipAPI.Enums;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 
 
-namespace Aftership{
+namespace AftershipAPI
+{
 
 	/// <summary>
 	/// Tracking. Keep instances of trackings
@@ -110,16 +111,22 @@ namespace Aftership{
 		}
 
 		public Tracking(JObject trackingJSON){
+            String destination_country_iso3;
+            String origin_country_iso3;
 
-			this.id = trackingJSON["id"]==null?null:(String)trackingJSON["id"];
+            this.id = trackingJSON["id"]==null?null:(String)trackingJSON["id"];
 
 			//fields that can be updated by the user
 			_trackingNumber = trackingJSON["tracking_number"]==null?null:(String)trackingJSON["tracking_number"];
 			_slug= trackingJSON["slug"]==null?null:(String)trackingJSON["slug"];
 			_title = trackingJSON["title"]==null?null:(String)trackingJSON["title"];
 			_customerName = trackingJSON["customer_name"]==null?null:(String)trackingJSON["customer_name"];
-			_destinationCountryISO3 = (String)trackingJSON["destination_country_iso3"]==null?0:
-				(ISO3Country)Enum.Parse(typeof(ISO3Country), (String)trackingJSON["destination_country_iso3"]);
+            destination_country_iso3 = (String)trackingJSON["destination_country_iso3"];
+
+            if (destination_country_iso3 != null && destination_country_iso3 != String.Empty)
+            {
+                _destinationCountryISO3 = (ISO3Country)Enum.Parse(typeof(ISO3Country), destination_country_iso3);
+            }
 			_orderID = trackingJSON["order_id"]==null?null:(String)trackingJSON["order_id"];
 			_orderIDPath = trackingJSON["order_id_path"]==null?null:(String)trackingJSON["order_id_path"];
 			_trackingAccountNumber = trackingJSON["tracking_account_number"]==null?null:
@@ -162,8 +169,13 @@ namespace Aftership{
 			_expectedDelivery = trackingJSON["expected_delivery"]==null?null:(String)trackingJSON["expected_delivery"];
 
 			_active = trackingJSON ["active"] == null? false : (bool) trackingJSON["active"];
-			_originCountryISO3 = (String)trackingJSON["origin_country_iso3"]==null?0:
-				(ISO3Country)Enum.Parse(typeof(ISO3Country), (String)trackingJSON["origin_country_iso3"]);
+
+            origin_country_iso3 = (String)trackingJSON["origin_country_iso3"];
+
+            if (origin_country_iso3 != null && origin_country_iso3 != String.Empty)
+            {
+                _originCountryISO3 = (ISO3Country)Enum.Parse(typeof(ISO3Country), origin_country_iso3);
+            }
 			_shipmentPackageCount =  trackingJSON["shipment_package_count"]==null?0:
 				(int)trackingJSON["shipment_package_count"];
 			_shipmentType = trackingJSON["shipment_type"]==null?null:(String)trackingJSON["shipment_type"];
