@@ -107,11 +107,24 @@ Examples of code
 	param1.addDestination(ISO3Country.ESP);  
  	List<Tracking> totalSpain =connection.getTrackings(param1);
 
-####2015-05-11 v4.0.9
-- Use NewtonSoft version 6.0.8 for JSON (latest stable)
-- Change the test framework to Microsoft unitesting (instead of use Nunit)
-- Delete dependencies, now only need Newtonsoft.Json and System.
+####2015-05-11 v4.0.11
+- Change dependecies:
+	- Delete dependencies Microsoft added automatically not needed.
+- Delete a line printing the request to the Aftership server.
 
+####2015-05-11 v4.0.9
+- Change dependencies:
+	- NewtonSoft 6.0.8 (latest stable).
+	- Change the test framework to Microsoft unitesting (instead of use Nunit).
+	- Delete dependencies, now only need Newtonsoft.Json and System.
+
+####2015-05-11 v4.0.8
+- Dependencies:
+	-  Newtonsoft.Json 3.5.8
+	-  System.Web
+	-  System.Net
+	-  System
+	
 ## License
 Copyright (c) 2015 Aftership  
 Licensed under the MIT license.
@@ -126,3 +139,5 @@ Generate a new version of the project in Nuget:
 - Dowload Nuget.exe (in Windows).
 - Run with cmd at the directory where the .nuspec is: nuget pack
 - That generates an .nupkg file. This is the file we have to upload to the the Nuget library.
+- Before generate the .nupkg, clean and build the solution, otherwise the changes won't be updated.
+- For load a .nupkg from source execute in the Package Manager Console ```Install-Package Aftership -Source Z:\Users\jesus\NET\Aftership-API\```
