@@ -118,7 +118,7 @@ Examples of code
 	- Change the test framework to Microsoft unitesting (instead of use Nunit).
 	- Delete dependencies, now only need Newtonsoft.Json and System.
 
-####2015-05-11 v4.0.8
+####2015-01-05 v4.0.8
 - Dependencies:
 	-  Newtonsoft.Json 3.5.8
 	-  System.Web
