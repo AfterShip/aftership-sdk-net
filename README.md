@@ -1,7 +1,7 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 4.0.0
+Aftership SDK .NET Version 4.0.6
 
 Before you start
 --------------
@@ -107,6 +107,14 @@ Examples of code
 	param1.addDestination(ISO3Country.ESP);  
  	List<Tracking> totalSpain =connection.getTrackings(param1);
 
+####2015-05-11 v4.0.5
+- Use NewtonSoft version 6.8 for JSON (latest stable)
+- Change the test framework to Microsoft unitesting (instead of use Nunit)
+- Delete dependencies, now only need Newtonsoft.Json and System.
+
+## License
+Copyright (c) 2015 Aftership  
+Licensed under the MIT license.
  	
 
 For Aftership developers
