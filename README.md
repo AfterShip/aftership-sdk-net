@@ -108,7 +108,7 @@ Examples of code
  	List<Tracking> totalSpain =connection.getTrackings(param1);
 
 ####2015-05-11 v4.0.5
-- Use NewtonSoft version 6.8 for JSON (latest stable)
+- Use NewtonSoft version 6.0.8 for JSON (latest stable)
 - Change the test framework to Microsoft unitesting (instead of use Nunit)
 - Delete dependencies, now only need Newtonsoft.Json and System.
 
