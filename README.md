@@ -1,7 +1,7 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 4.0.9
+Aftership SDK .NET Version 4.0.11
 
 Before you start
 --------------
@@ -135,9 +135,9 @@ For Aftership developers
 
 Generate a new version of the project in Nuget:
 
-- Mofify the file Aftership-API.nuspec with the new version (as 4.0.5) in the same directory as the .csproj file (c# project file).
+- Mofify the file Aftership-API.nuspec with the new version (as 4.0.5) in the same directory as the *.csproj file (c# project file).
 - Dowload Nuget.exe (in Windows).
-- Run with cmd at the directory where the .nuspec is: nuget pack
-- That generates an .nupkg file. This is the file we have to upload to the the Nuget library.
-- Before generate the .nupkg, clean and build the solution, otherwise the changes won't be updated.
+- Run with cmd at the directory as the *.nuspec is: ```nuget pack```
+- That generates an *.nupkg file. This is the file we have to upload to the the Nuget library.
+- Before generate the *.nupkg, clean and build the solution, otherwise the changes won't be updated.
 - For load a .nupkg from source execute in the Package Manager Console ```Install-Package Aftership -Source Z:\Users\jesus\NET\Aftership-API\```
