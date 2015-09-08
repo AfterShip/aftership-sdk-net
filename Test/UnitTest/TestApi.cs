@@ -10,8 +10,7 @@ namespace Test
     public class TestConnectionAPI
     {
 
-        //remember to change your API Key
-        ConnectionAPI connection = new ConnectionAPI("9b98faf2-1111-1111-1111-1111111111111");
+        ConnectionAPI connection; 
         //static int TOTAL_COURIERS_API = 225;
 
         String[] couriersDetected = { "dpd", "fedex" };
@@ -50,9 +49,13 @@ namespace Test
 
         [TestInitialize()]
         public void setUp()
-        {
+        { 
+            String key = System.IO.File.ReadAllText(@"\\psf\Home\Documents\aftership-key.txt");
+            connection = new ConnectionAPI(key);
+
             if (firstTime)
             {
+
                 Console.WriteLine("****************SET-UP BEGIN**************");
                 firstTime = false;
                 //delete the tracking we are going to post (in case it exist)
