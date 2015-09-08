@@ -108,6 +108,9 @@ Examples of code
  	List<Tracking> totalSpain =connection.getTrackings(param1);
 
 ####2015-05-11 v4.0.11
+- Rearrange all the code (we wont bump the version cause is the same). 
+
+####2015-05-11 v4.0.11
 - Change dependecies:
 	- Delete dependencies Microsoft added automatically not needed.
 - Delete a line printing the request to the Aftership server.
