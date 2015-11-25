@@ -11,7 +11,8 @@ namespace AftershipAPI
 		static void Main(string[] args)
 		{
 
-//			//Create an instance of ConnectionAPI using the token of the user
+            //			//Create an instance of ConnectionAPI using the token of the user
+
             String key = System.IO.File.ReadAllText(@"\\psf\Home\Documents\aftership-key.txt");
             ConnectionAPI connection = new ConnectionAPI(key);
 

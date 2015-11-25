@@ -5,10 +5,8 @@ namespace AftershipAPI
     public class DateMethods
     {
         private static String ISO8601Long = "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz";
-
-
-
-            public static DateTime getDate( String date){
+        private static String DateFormat = "MM'/'dd'/'yyyy HH:mm:ss";
+        public static DateTime getDate( String date){
 //            SimpleDateFormat dateFormat;
 //            StringBuilder sb = new StringBuilder(date);
 //            DateTime newDate = null;
@@ -24,10 +22,21 @@ namespace AftershipAPI
             //            },
 //            Console.WriteLine (date.Length +"date >>> " + date);
             if (date.Length == 25) {
-                    return DateTime.ParseExact(date,ISO8601Long, System.Globalization.CultureInfo.InvariantCulture);  
+                    return DateTime.ParseExact(date, ISO8601Long,
+                        System.Globalization.CultureInfo.InvariantCulture);  
+            }
+            DateTime responseDateTime = DateTime.MinValue;
+            try
+            {
+                responseDateTime = DateTime.ParseExact(date, DateFormat,
+                    System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (Exception ex)
+            {
+                DateTime.TryParse(date, out responseDateTime);
             }
 
-            return  Convert.ToDateTime(date);  ;
+            return responseDateTime;
         }
 
         public static String ToString(DateTime date){
