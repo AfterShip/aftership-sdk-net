@@ -107,6 +107,12 @@ Examples of code
 	param1.addDestination(ISO3Country.ESP);  
  	List<Tracking> totalSpain =connection.getTrackings(param1);
 
+####2015-05-11 v5.0.0
+- Change the way we deal with dates, so differents Date Culture don't have any issues.
+- The user will receive the date to String in their local Timezone **breaking change**
+- Change dependencies:
+	- NewtonSoft 8.0.1 (latest stable). **breaking change**
+
 ####2015-05-11 v4.0.11
 - Rearrange all the code (we wont bump the version cause is the same). 
 
@@ -140,7 +146,7 @@ Generate a new version of the project in Nuget:
 
 - Mofify the file Aftership-API.nuspec with the new version (as 4.0.5) in the same directory as the *.csproj file (c# project file).
 - Dowload Nuget.exe (in Windows).
-- Run with cmd at the directory as the *.nuspec is: ```nuget pack```
+- Run with cmd at the directory as the *.nuspec is: ```nuget pack sample.csproj```
 - That generates an *.nupkg file. This is the file we have to upload to the the Nuget library.
 - Before generate the *.nupkg, clean and build the solution, otherwise the changes won't be updated.
-- For load a .nupkg from source execute in the Package Manager Console ```Install-Package Aftership -Source Z:\Users\jesus\NET\Aftership-API\```
+- For load a .nupkg from source execute in the Package Manager Console ```Install-Package Aftership -Source Z:\Users\jesus\git\aftership-net\Aftership-API```

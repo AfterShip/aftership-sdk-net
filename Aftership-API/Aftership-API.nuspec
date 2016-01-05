@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Aftership</id>
-    <version>4.0.11</version>
+    <version>5.0.0</version>
     <authors>Aftership Team</authors>
     <owners>Aftership</owners>
     <projectUrl>https://www.aftership.com/</projectUrl>
@@ -12,7 +12,7 @@
     <copyright>Copyright 2014</copyright>
     <tags>Aftership Track Tracking Courier Couriers</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="Newtonsoft.Json" version="8.0.1" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System" targetFramework="sl3" />

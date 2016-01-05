@@ -41,7 +41,7 @@ namespace AftershipAPI
 		public Checkpoint (JObject checkpointJSON){
            // Console.WriteLibe(typeof(checkpointJSON["created_at"]));
             this.createdAt = checkpointJSON["created_at"]== null? DateTime.MinValue:
-                DateMethods.getDate((String)checkpointJSON["created_at"]);
+                (DateTime)checkpointJSON["created_at"];
 			this.checkpointTime = checkpointJSON["checkpoint_time"]==null?null:(String)checkpointJSON["checkpoint_time"];
 			this.city = checkpointJSON["city"]==null?null:(String)checkpointJSON["city"];
 			this.countryISO3 = checkpointJSON["country_iso_3"]==null?0:

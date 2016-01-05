@@ -164,8 +164,8 @@ namespace AftershipAPI
 			} 
 
 			//fields that can't be updated by the user, only retrieve
-            _createdAt = trackingJSON["created_at"]== null?DateTime.MinValue:DateMethods.getDate((String)trackingJSON["created_at"]);
-            _updatedAt = trackingJSON["updated_at"]==null?DateTime.MinValue:DateMethods.getDate((String)trackingJSON["updated_at"]);
+            _createdAt = trackingJSON["created_at"]== null?DateTime.MinValue:(DateTime)trackingJSON["created_at"];
+            _updatedAt = trackingJSON["updated_at"]==null?DateTime.MinValue:(DateTime)trackingJSON["updated_at"];
 			_expectedDelivery = trackingJSON["expected_delivery"]==null?null:(String)trackingJSON["expected_delivery"];
 
 			_active = trackingJSON ["active"] == null? false : (bool) trackingJSON["active"];

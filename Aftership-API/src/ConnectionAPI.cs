@@ -15,6 +15,7 @@ namespace AftershipAPI
     public class ConnectionAPI 
     {
 		String _tokenAftership;
+		String _url;
 		private static String URL_SERVER = "https://api.aftership.com/";
 
 		//private static String URL_SERVER = "http://localhost:3001/";
@@ -25,9 +26,17 @@ namespace AftershipAPI
 		/// </summary>
 		/// <param name="tokenAfthership"> Afthership token for the connection</param>
 		/// <returns></returns>
-		public ConnectionAPI( String tokenAfthership)
+		public ConnectionAPI( String tokenAfthership, String url = null)
         {
 			_tokenAftership = tokenAfthership;
+			if (url != null)
+			{
+				_url = url;
+			}
+			else
+			{
+				_url = URL_SERVER;
+			}
         }
 
         /// <summary>
@@ -469,7 +478,7 @@ namespace AftershipAPI
 		public JObject request(String method, String urlResource, String body)
         {
            // Console.WriteLine ("Start Request "+DateTime.Now);
-			string url = URL_SERVER  + VERSION_API + urlResource;
+			string url = _url  + VERSION_API + urlResource;
 			string json_response = "";
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
@@ -480,7 +489,7 @@ namespace AftershipAPI
             request.Headers = header;
 			request.ContentType = "application/json";
 			request.Method = method;
-			//Console.WriteLine(method+" Requesting the URL :"+ url);
+			// Console.WriteLine(method+" Requesting the URL :"+ url);
 
 			if(body!=null){
                // Console.WriteLine ("body: " + body);
@@ -523,7 +532,7 @@ namespace AftershipAPI
 //            }finally{
 //                Console.WriteLine ("Finish Request "+DateTime.Now);
 //            }
-//            Console.WriteLine ("Response request: "+json_response+"*");
+            Console.WriteLine ("Response request: "+json_response+"*");
 			return JObject.Parse(json_response);;
         }
 

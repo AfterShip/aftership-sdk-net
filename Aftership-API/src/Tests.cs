@@ -2,45 +2,55 @@
 using Newtonsoft.Json;
 using AftershipAPI.Enums;
 using System.Collections.Generic;
+using System.Threading;
+
 
 namespace AftershipAPI
 {
 
 	public class Tests{
 
+
+
 		static void Main(string[] args)
 		{
 
-//			//Create an instance of ConnectionAPI using the token of the user
-            String key = System.IO.File.ReadAllText(@"\\psf\Home\Documents\aftership-key.txt");
-            ConnectionAPI connection = new ConnectionAPI(key);
+			//Create an instance of ConnectionAPI using the token of the user
+            // String key = System.IO.File.ReadAllText(@"\\psf\Home\Documents\aftership-key.txt");
+            // ConnectionAPI connection_api = new ConnectionAPI(key, null);
+            // ConnectionAPI connection_api_backup= new ConnectionAPI(key, "https://api-backup.aftership.com/");
 
-            try
-            {
-                Tracking bpost1 = new Tracking("EA914276314BE");
-                bpost1.slug = "bpost-international";
-                bpost1 = connection.getTrackingByNumber(bpost1);
-                Console.WriteLine(bpost1.ToString());
+			// string dhl_example = "1234567890";
+			// Tracking tracking1 = new Tracking(dhl_example);
+			// tracking1.slug = "dhl";
+			// while (true) {
+			// 	try
+			// 	{
+			// 		Tracking trackingPosted = connection_api.createTracking(tracking1);
+			// 		connection_api.deleteTracking(tracking1);
+			// 	}
+			// 	catch (Exception e)
+			// 	{
+			// 		Console.WriteLine("failing in the api.aftershi.com");
+			// 		Console.WriteLine(e);
+			// 	}
 
-                Tracking bpost2 = new Tracking("EA914300415BE");
-                bpost2.slug = "bpost-international";
-                bpost2 = connection.getTrackingByNumber(bpost2);
-                Console.WriteLine(bpost2.ToString());
+			// 	try
+			// 	{
+			// 		Tracking trackingPosted = connection_api_backup.createTracking(tracking1);
+			// 		connection_api_backup.deleteTracking(tracking1);
+			// 	}
+			// 	catch (Exception e)
+			// 	{
+			// 		Console.WriteLine("failing in the api.aftershi.com");
+			// 		Console.WriteLine(e);
+			// 	}
+			// 	Thread.Sleep(1000);
+			// }
 
+			// Console.WriteLine("execution finished!!!");
+            // Console.ReadLine();
 
-                Tracking bpost3 = new Tracking("EA914300407BE");
-                bpost3.slug = "bpost-international";
-                bpost3 = connection.getTrackingByNumber(bpost3);
-                Console.WriteLine(bpost3.ToString());
-            }
-            catch (Exception e)
-            {
-
-                Console.WriteLine(e);
-
-            }
-
-            Console.ReadLine();
             //
             //			//create a new tracking to add to our account
             //			Tracking newTracking = new Tracking ("7126900292");
