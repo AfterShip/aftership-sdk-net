@@ -125,7 +125,14 @@ namespace AftershipAPI
 
             if (destination_country_iso3 != null && destination_country_iso3 != String.Empty)
             {
-                _destinationCountryISO3 = (ISO3Country)Enum.Parse(typeof(ISO3Country), destination_country_iso3);
+                try
+                {
+                    _destinationCountryISO3 = (ISO3Country)Enum.Parse(typeof(ISO3Country), destination_country_iso3);
+                }
+                catch (Exception)
+                {
+                    //DO NOTHING
+                }
             }
 			_orderID = trackingJSON["order_id"]==null?null:(String)trackingJSON["order_id"];
 			_orderIDPath = trackingJSON["order_id_path"]==null?null:(String)trackingJSON["order_id_path"];

@@ -15,7 +15,7 @@ namespace AftershipAPI
   		///YYYY-MM-DD,
      	///YYYY-MM-DDTHH:MM:SS, or
      	///YYYY-MM-DDTHH:MM:SS+TIMEZONE 
-		private String _checkpointTime;
+		private DateTime? _checkpointTime;
 
 		/// Location info (if any) 
 		private String _city;
@@ -42,7 +42,7 @@ namespace AftershipAPI
            // Console.WriteLibe(typeof(checkpointJSON["created_at"]));
             this.createdAt = checkpointJSON["created_at"]== null? DateTime.MinValue:
                 DateMethods.getDate((String)checkpointJSON["created_at"]);
-			this.checkpointTime = checkpointJSON["checkpoint_time"]==null?null:(String)checkpointJSON["checkpoint_time"];
+			this.checkpointTime = checkpointJSON["checkpoint_time"]==null?null:(DateTime?)checkpointJSON["checkpoint_time"];
 			this.city = checkpointJSON["city"]==null?null:(String)checkpointJSON["city"];
 			this.countryISO3 = checkpointJSON["country_iso_3"]==null?0:
 				(ISO3Country)Enum.Parse(typeof(ISO3Country), (String)checkpointJSON["country_iso3"]);
@@ -58,7 +58,8 @@ namespace AftershipAPI
 			set { _createdAt = value; }
 		}
 
-		public String checkpointTime{
+		public DateTime? checkpointTime
+        {
 			get { return _checkpointTime; }
 			set { _checkpointTime = value; }
 		}
