@@ -44,7 +44,7 @@ namespace AftershipAPI
                 (DateTime)checkpointJSON["created_at"];
 			this.checkpointTime = checkpointJSON["checkpoint_time"]==null?null:(String)checkpointJSON["checkpoint_time"];
 			this.city = checkpointJSON["city"]==null?null:(String)checkpointJSON["city"];
-			this.countryISO3 = checkpointJSON["country_iso3"]==null?0:
+			this.countryISO3 = checkpointJSON["country_iso3"].IsNullOrEmpty() ? 0:
 				(ISO3Country)Enum.Parse(typeof(ISO3Country), (String)checkpointJSON["country_iso3"]);
 			this.countryName = checkpointJSON["country_name"]==null?null:(String)checkpointJSON["country_name"];
 			this.message = checkpointJSON["message"]==null?null:(String)checkpointJSON["message"];

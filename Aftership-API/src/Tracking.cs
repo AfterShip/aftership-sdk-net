@@ -176,7 +176,7 @@ namespace AftershipAPI
             {
                 _originCountryISO3 = (ISO3Country)Enum.Parse(typeof(ISO3Country), origin_country_iso3);
             }
-			_shipmentPackageCount =  trackingJSON["shipment_package_count"]==null?0:
+			_shipmentPackageCount = trackingJSON["shipment_package_count"].IsNullOrEmpty() ? 0:
 				(int)trackingJSON["shipment_package_count"];
 			_shipmentType = trackingJSON["shipment_type"]==null?null:(String)trackingJSON["shipment_type"];
 			_signedBy = trackingJSON["singned_by"]==null?null:(String)trackingJSON["signed_by"];

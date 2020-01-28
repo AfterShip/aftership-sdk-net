@@ -54,6 +54,7 @@
     <Compile Include="src\Enums\FieldTracking.cs" />
     <Compile Include="src\Enums\ISO3Country.cs" />
     <Compile Include="src\Enums\StatusTag.cs" />
+    <Compile Include="src\ExtensionMethods.cs" />
     <Compile Include="src\ParametersTracking.cs" />
     <Compile Include="src\QueryString.cs" />
     <Compile Include="src\Tests.cs" />
