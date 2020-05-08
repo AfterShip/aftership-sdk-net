@@ -38,19 +38,29 @@ namespace AftershipAPI
 		/// Location info (if any) 
 		private String _zip;
 
+		private String _slug;
+
+		private String _location;
+
+		private String _subtag_message;
+
+
 		public Checkpoint (JObject checkpointJSON){
            // Console.WriteLibe(typeof(checkpointJSON["created_at"]));
             this.createdAt = checkpointJSON["created_at"]== null? DateTime.MinValue:
                 (DateTime)checkpointJSON["created_at"];
 			this.checkpointTime = checkpointJSON["checkpoint_time"]==null?null:(String)checkpointJSON["checkpoint_time"];
 			this.city = checkpointJSON["city"]==null?null:(String)checkpointJSON["city"];
-			this.countryISO3 = checkpointJSON["country_iso3"]==null?0:
+			this.countryISO3 = checkpointJSON["country_iso3"]==null || !checkpointJSON["country_iso3"].HasValues ? 0:
 				(ISO3Country)Enum.Parse(typeof(ISO3Country), (String)checkpointJSON["country_iso3"]);
 			this.countryName = checkpointJSON["country_name"]==null?null:(String)checkpointJSON["country_name"];
 			this.message = checkpointJSON["message"]==null?null:(String)checkpointJSON["message"];
 			this.state = checkpointJSON["state"]==null?null:(String)checkpointJSON["state"];
 			this.tag = checkpointJSON["tag"]==null?null:(String)checkpointJSON["tag"];
 			this.zip = checkpointJSON["zip"]==null?null:(String)checkpointJSON["zip"];
+			this.slug = checkpointJSON["slug"] ==null?null:(String)checkpointJSON["slug"];
+			this.location = checkpointJSON["location"] ==null?null:(String)checkpointJSON["location"];
+			this.subtagMessage = checkpointJSON["subtag_message"] ==null?null:(String)checkpointJSON["subtag_message"];
 		}
 
         public DateTime createdAt{
@@ -96,6 +106,24 @@ namespace AftershipAPI
 		public String zip{
 			get { return _zip; }
 			set { _zip = value; }
+		}
+
+		public String slug
+		{
+			get { return _slug; }
+			set { _slug = value; }
+		}
+
+		public String location
+		{
+			get { return _location; }
+			set { _location = value; }
+		}
+
+		public String subtagMessage
+		{
+			get { return _subtag_message; }
+			set { _subtag_message = value; }
 		}
 
 

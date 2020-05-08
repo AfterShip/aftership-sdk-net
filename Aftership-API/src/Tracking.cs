@@ -104,6 +104,10 @@ namespace AftershipAPI
 		///Tracking ship date tracking_ship_date
 		private String _trackingShipDate;
 
+		private String _courier_tracking_link;
+		
+		private String _subtag_message;
+
 
 		public Tracking(String trackingNumber) {
 			_trackingNumber = trackingNumber;
@@ -135,6 +139,10 @@ namespace AftershipAPI
 				(String)trackingJSON["tracking_postal_code"];
 			_trackingShipDate = trackingJSON["tracking_ship_date"]==null?null:
 				(String)trackingJSON["tracking_ship_date"];
+			_courier_tracking_link = trackingJSON["courier_tracking_link"] == null ? null :
+                (String)trackingJSON["courier_tracking_link"];
+			_subtag_message = trackingJSON["subtag_message"] == null ? null :
+				(String)trackingJSON["subtag_message"];
 
 			JArray smsesArray =trackingJSON["smses"]==null?null:(JArray)trackingJSON["smses"];
 			if(smsesArray !=null && smsesArray.Count!=0){
@@ -176,10 +184,10 @@ namespace AftershipAPI
             {
                 _originCountryISO3 = (ISO3Country)Enum.Parse(typeof(ISO3Country), origin_country_iso3);
             }
-			_shipmentPackageCount =  trackingJSON["shipment_package_count"]==null?0:
+			_shipmentPackageCount =  trackingJSON["shipment_package_count"]==null || !trackingJSON["shipment_package_count"].HasValues ? 0:
 				(int)trackingJSON["shipment_package_count"];
 			_shipmentType = trackingJSON["shipment_type"]==null?null:(String)trackingJSON["shipment_type"];
-			_signedBy = trackingJSON["singned_by"]==null?null:(String)trackingJSON["signed_by"];
+			_signedBy = trackingJSON["signed_by"]==null?null:(String)trackingJSON["signed_by"];
 			_source = trackingJSON["source"]==null?null:(String)trackingJSON["source"];
 			_tag = (String)trackingJSON["tag"]==null?0:
 				(StatusTag)Enum.Parse(typeof(StatusTag), (String)trackingJSON["tag"]);
@@ -369,7 +377,19 @@ namespace AftershipAPI
 
 		public String trackingShipDate{
 			get { return _trackingShipDate; }
-			set { _trackingShipDate = value; }		
+			set { _trackingShipDate = value; }
+		}
+
+		public String courierTrackingLink
+		{
+			get { return _courier_tracking_link; }
+			set { _courier_tracking_link = value; }
+		}
+
+		public String subtagMessage
+		{
+			get { return _subtag_message; }
+			set { _subtag_message = value; }
 		}
 
 		public List<Checkpoint> checkpoints{
