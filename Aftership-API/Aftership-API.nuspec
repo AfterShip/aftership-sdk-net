@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>Aftership</id>
-    <version>5.0.1</version>
+    <version>5.0.2</version>
     <authors>Aftership Team</authors>
     <owners>Aftership</owners>
     <projectUrl>https://www.aftership.com/</projectUrl>
-    <iconUrl>https://www.aftership.com/assets/common/img/logo-aftership-premium-bright.png</iconUrl>
+    <iconUrl>https://images.ctfassets.net/3n0fku9d0jjr/3jnX6ydpyE00K88CMuGg84/c8d90c30b76991453d9f31703cdaa3ae/aftershiplogo-01.svg</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description> Aftership API, track your shipments </description>
-    <copyright>Copyright 2014</copyright>
+    <description>Aftership API, track your shipments</description>
+    <copyright>Copyright 2020</copyright>
     <tags>Aftership Track Tracking Courier Couriers</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="8.0.1" />
