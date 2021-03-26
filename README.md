@@ -107,6 +107,9 @@ Examples of code
 	param1.addDestination(ISO3Country.ESP);  
  	List<Tracking> totalSpain =connection.getTrackings(param1);
 
+####2021-03-26 
+- Fix SSL exception
+
 ####2015-05-11 v5.0.0
 - Change the way we deal with dates, so differents Date Culture don't have any issues.
 - The user will receive the date to String in their local Timezone **breaking change**
