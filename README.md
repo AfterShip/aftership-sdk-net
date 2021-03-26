@@ -1,7 +1,7 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 5.0.2
+Aftership SDK .NET Version 5.0.3
 
 Before you start
 --------------
