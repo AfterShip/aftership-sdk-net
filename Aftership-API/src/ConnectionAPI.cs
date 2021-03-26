@@ -477,7 +477,7 @@ namespace AftershipAPI
 		/// 
 		public JObject request(String method, String urlResource, String body)
         {
-           // Console.WriteLine ("Start Request "+DateTime.Now);
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			string url = _url  + VERSION_API + urlResource;
 			string json_response = "";
 
