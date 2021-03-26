@@ -107,7 +107,7 @@ Examples of code
 	param1.addDestination(ISO3Country.ESP);  
  	List<Tracking> totalSpain =connection.getTrackings(param1);
 
-#### 2021-03-26
+#### 2021-03-26 v5.0.3
 - Fix SSL exception
 
 #### 2015-05-11 v5.0.0
