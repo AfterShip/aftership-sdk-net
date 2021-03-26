@@ -1,7 +1,7 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 4.0.11
+Aftership SDK .NET Version 5.0.2
 
 Before you start
 --------------
@@ -116,21 +116,21 @@ Examples of code
 - Change dependencies:
 	- NewtonSoft 8.0.1 (latest stable). **breaking change**
 
-####2015-05-11 v4.0.11
+#### 2015-05-11 v4.0.11
 - Rearrange all the code (we wont bump the version cause is the same). 
 
-####2015-05-11 v4.0.11
+#### 2015-05-11 v4.0.11
 - Change dependecies:
 	- Delete dependencies Microsoft added automatically not needed.
 - Delete a line printing the request to the Aftership server.
 
-####2015-05-11 v4.0.9
+#### 2015-05-11 v4.0.9
 - Change dependencies:
 	- NewtonSoft 6.0.8 (latest stable).
 	- Change the test framework to Microsoft unitesting (instead of use Nunit).
 	- Delete dependencies, now only need Newtonsoft.Json and System.
 
-####2015-01-05 v4.0.8
+#### 2015-01-05 v4.0.8
 - Dependencies:
 	-  Newtonsoft.Json 3.5.8
 	-  System.Web
