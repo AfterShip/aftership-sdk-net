@@ -1,7 +1,7 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 5.0.3
+Aftership SDK .NET Version 5.0.4
 
 Before you start
 --------------
@@ -106,6 +106,13 @@ Examples of code
     //in param1 we add all the options we want
 	param1.addDestination(ISO3Country.ESP);  
  	List<Tracking> totalSpain =connection.getTrackings(param1);
+
+#### 2021-03-26 v5.0.4
+- Add Available For Pickup status tag.
+- Checkpoint: add Slug, Location, Subtag Message.
+- Tracking: Courier Tracking Link, Subtag, Subtag Message.
+- Fix SignedBy field (always empty).
+- Fix casting and type conversions.
 
 #### 2021-03-26 v5.0.3
 - Fix SSL exception
