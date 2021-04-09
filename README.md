@@ -112,7 +112,7 @@ Examples of code
 - Checkpoint: add Slug, Location, Subtag Message.
 - Tracking: Courier Tracking Link, Subtag, Subtag Message.
 - Fix SignedBy field (always empty).
-- Fix casting and type conversions.
+- Fix casting and type conversions exception issue.
 
 #### 2021-03-26 v5.0.3
 - Fix SSL exception
