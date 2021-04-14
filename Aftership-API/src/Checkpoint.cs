@@ -38,6 +38,15 @@ namespace AftershipAPI
         /// Location info (if any) 
         private String _zip;
 
+        /// Unique code of courier
+        private String _slug;
+
+        /// Location info provided by carrier
+        private String _location;
+
+        /// Normalized checkpoint message
+        private String _subtag_message;
+
         public Checkpoint(JObject checkpointJSON)
         {
             // Console.WriteLibe(typeof(checkpointJSON["created_at"]));
@@ -52,6 +61,9 @@ namespace AftershipAPI
             this.state = checkpointJSON["state"].IsNullOrEmpty() ? null : (String)checkpointJSON["state"];
             this.tag = checkpointJSON["tag"].IsNullOrEmpty() ? null : (String)checkpointJSON["tag"];
             this.zip = checkpointJSON["zip"].IsNullOrEmpty() ? null : (String)checkpointJSON["zip"];
+            this.slug = checkpointJSON["slug"].IsNullOrEmpty() ? null : (String)checkpointJSON["slug"];
+            this.location = checkpointJSON["location"].IsNullOrEmpty() ? null : (String)checkpointJSON["location"];
+            this.subtagMessage = checkpointJSON["subtag_message"].IsNullOrEmpty() ? null : (String)checkpointJSON["subtag_message"];
         }
 
         public DateTime createdAt
@@ -108,7 +120,23 @@ namespace AftershipAPI
             set { _zip = value; }
         }
 
+        public String slug
+        {
+            get { return _slug; }
+            set { _slug = value; }
+        }
 
+        public String location
+        {
+            get { return _location; }
+            set { _location = value; }
+        }
+
+        public String subtagMessage
+        {
+            get { return _subtag_message; }
+            set { _subtag_message = value; }
+        }
 
     }
 }

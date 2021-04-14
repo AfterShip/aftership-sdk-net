@@ -114,6 +114,14 @@ namespace AftershipAPI
         ///Tracking ship date tracking_ship_date
         private String _trackingShipDate;
 
+        /// Current subtag of tracking
+        private String _subtag;
+
+        /// Normalized tracking message 
+        private String _subtagMessage;
+
+        /// Official tracking URL of the courier
+        private String _courierTrackingLink;
 
         public Tracking(String trackingNumber)
         {
@@ -184,9 +192,9 @@ namespace AftershipAPI
             //fields that can't be updated by the user, only retrieve
             _createdAt = trackingJSON["created_at"].IsNullOrEmpty() ? DateTime.MinValue : (DateTime)trackingJSON["created_at"];
             _updatedAt = trackingJSON["updated_at"].IsNullOrEmpty() ? DateTime.MinValue : (DateTime)trackingJSON["updated_at"];
-            _expectedDelivery = trackingJSON["expected_delivery"] == null ? null : (String)trackingJSON["expected_delivery"];
+            _expectedDelivery = trackingJSON["expected_delivery"].IsNullOrEmpty() ? null : (String)trackingJSON["expected_delivery"];
 
-            _active = trackingJSON["active"] == null ? false : (bool)trackingJSON["active"];
+            _active = trackingJSON["active"].IsNullOrEmpty() ? false : (bool)trackingJSON["active"];
 
             origin_country_iso3 = (String)trackingJSON["origin_country_iso3"];
 
@@ -196,17 +204,21 @@ namespace AftershipAPI
             }
             _shipmentPackageCount = trackingJSON["shipment_package_count"].IsNullOrEmpty() ? 0 :
                 (int)trackingJSON["shipment_package_count"];
-            _shipmentType = trackingJSON["shipment_type"] == null ? null : (String)trackingJSON["shipment_type"];
-            _signedBy = trackingJSON["singned_by"] == null ? null : (String)trackingJSON["signed_by"];
-            _source = trackingJSON["source"] == null ? null : (String)trackingJSON["source"];
+            _shipmentType = trackingJSON["shipment_type"].IsNullOrEmpty() ? null : (String)trackingJSON["shipment_type"];
+            _signedBy = trackingJSON["signed_by"].IsNullOrEmpty() ? null : (String)trackingJSON["signed_by"];
+            _source = trackingJSON["source"].IsNullOrEmpty() ? null : (String)trackingJSON["source"];
             _tag = (String)trackingJSON["tag"] == null ? 0 :
                 (StatusTag)Enum.Parse(typeof(StatusTag), (String)trackingJSON["tag"]);
 
             _trackedCount = trackingJSON["tracked_count"].IsNullOrEmpty() ? 0 : (int)trackingJSON["tracked_count"];
-            _uniqueToken = trackingJSON["unique_token"] == null ? null : (String)trackingJSON["unique_token"];
+            _uniqueToken = trackingJSON["unique_token"].IsNullOrEmpty() ? null : (String)trackingJSON["unique_token"];
+
+            _subtag = trackingJSON["subtag"].IsNullOrEmpty() ? null: (string)trackingJSON["subtag"];
+            _subtagMessage = trackingJSON["subtag_message"].IsNullOrEmpty() ? null : (string)trackingJSON["subtag_message"];
+            _courierTrackingLink = trackingJSON["courier_tracking_link"].IsNullOrEmpty() ? null : (string)trackingJSON["courier_tracking_link"];
 
             // checkpoints
-            JArray checkpointsArray = trackingJSON["checkpoints"] == null ? null :
+            JArray checkpointsArray = trackingJSON["checkpoints"].IsNullOrEmpty() ? null :
                 (JArray)trackingJSON["checkpoints"];
             if (checkpointsArray != null && checkpointsArray.Count != 0)
             {
@@ -432,6 +444,24 @@ namespace AftershipAPI
         {
             get { return _trackingShipDate; }
             set { _trackingShipDate = value; }
+        }
+
+        public String subtag
+        {
+            get { return _subtag; }
+            set { _subtag = value; }
+        }
+
+        public String subtagMessage
+        {
+            get { return _subtagMessage; }
+            set { _subtagMessage = value; }
+        }
+
+        public String courierTrackingLink
+        {
+            get { return _courierTrackingLink; }
+            set { _courierTrackingLink = value; }
         }
 
         public List<Checkpoint> checkpoints
