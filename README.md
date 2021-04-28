@@ -1,7 +1,7 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 5.0.4
+Aftership SDK .NET Version 5.0.5
 
 Before you start
 --------------
@@ -106,6 +106,15 @@ Examples of code
     //in param1 we add all the options we want
 	param1.addDestination(ISO3Country.ESP);  
  	List<Tracking> totalSpain =connection.getTrackings(param1);
+
+    //mark the tracking completed
+    //example slug, tracking:
+ 	Tracking trackingMark = new Tracking("RC328021065CN");
+ 	trackingMark.slug = "canada-post";
+ 	connection.markTrackingAsCompeleted (trackingMark,"DELIVERED");
+
+#### 2021-04-30 v5.0.5
+- Add mark tracking as completed function.
 
 #### 2021-03-26 v5.0.4
 - Add Available For Pickup status tag.

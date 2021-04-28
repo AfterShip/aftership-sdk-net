@@ -42,6 +42,10 @@ namespace Test
         //tracking to DeleteBad
         String trackingNumberDelete2 = "798865638020";
 
+        //tracking to mark
+        String trackingNumberMark = "798865638021";
+        String slugMark = "fedex";
+
         static bool firstTime = true;
 
         Dictionary<string, string> firstCourier = new Dictionary<string, string>();
@@ -49,7 +53,7 @@ namespace Test
 
         [TestInitialize()]
         public void setUp()
-        { 
+        {
             String key = System.IO.File.ReadAllText(@"\\psf\Home\Documents\aftership-key.txt");
             connection = new ConnectionAPI(key);
 
@@ -107,6 +111,24 @@ namespace Test
                 catch (Exception e)
                 {
                     Console.WriteLine("**4" + e.Message);
+
+                }
+                try
+                {
+
+                    Tracking newTracking2 = new Tracking(trackingNumberMark);
+                    newTracking2.slug = slugMark;
+                    try {
+                        connection.deleteTracking(newTracking2);
+                    }catch(Exception e)
+                    {
+                        Console.WriteLine("**5" + e.Message);
+                    }
+                    connection.createTracking(newTracking2);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("**6" + e.Message);
 
                 }
                 Console.WriteLine("****************SET-UP FINISH**************");
@@ -604,6 +626,17 @@ namespace Test
                 Assert.IsTrue(e.Message.Contains("Retrack is not allowed. You can only retrack each shipment once."));
 
             }
+        }
+
+        [TestMethod]
+        public void testMarkTrackingAsCompeleted()
+        {
+            Tracking tracking = new Tracking(trackingNumberMark);
+            tracking.slug = slugMark;
+            Tracking trackingMarked = connection.markTrackingAsCompeleted(tracking, "DELIVERED");
+            Assert.AreEqual(trackingMarked.tag, StatusTag.Delivered);
+            trackingMarked = connection.markTrackingAsCompeleted(tracking, "LOST");
+            Assert.AreEqual(trackingMarked.tag, StatusTag.Exception);
         }
     }
 }
