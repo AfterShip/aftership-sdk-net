@@ -133,7 +133,7 @@ namespace AftershipAPI
         private String _trackingKey;
 
         // Tracking state tracking_state
-        private String _tracking_state;
+        private String _trackingState;
 
         public Tracking(String trackingNumber)
         {
@@ -502,8 +502,8 @@ namespace AftershipAPI
 
         public String trackingState
         {
-            get { return _tracking_state; }
-            set { _tracking_state = value; }
+            get { return _trackingState; }
+            set { _trackingState = value; }
         }
 
         public String getJSONPost()
