@@ -466,16 +466,48 @@ namespace AftershipAPI
 			return tracking;
 		}
 
-		/// <summary>
-    	/// Make a request to the HTTP API of Aftership
-		/// </summary>
-		///<param name="method">String with the method of the request: GET, POST, PUT, DELETE</param> 
-		///<param name="urlResource">String with the URL of the request</param> 
-		///<param name="body">String JSON with the body of the request, 
-		/// if the request doesn't need body "GET/DELETE", the bodywould be null</param> 
-		/// <returns>A String JSON with the response of the request</returns>
-		/// 
-		public JObject request(String method, String urlResource, String body)
+        /// <summary>
+        /// Mark a tracking as completed. The tracking won't auto update until retrack it.
+        /// </summary>
+        /// <param name="tracking"></param>
+        /// <param name="reason"> One of DELIVERED, LOST or RETURNED_TO_SENDER.
+        /// Mark the tracking as completed with DELIVERED. The tag of the tracking will be updated to Delivered and the subtag will be updated to Delivered_001.
+        /// Mark the tracking as completed with LOST. The tag of the tracking will be updated to Exception and the subtag will be updated to Exception_013.
+        /// Mark the tracking as completed with RETURNED_TO_SENDER. The tag of the tracking will be updated to Exception and the subtag will be updated to Exception_011.
+        /// </param>
+        /// <returns></returns>
+        public Tracking markTrackingAsCompeleted(Tracking tracking, string reason)
+        {
+            JObject body = new JObject();
+            String parametersExtra;
+
+            //get the require fields if any (postal_code, tracking_account etc..)
+            String paramRequiredFields = replaceFirst(tracking.getQueryRequiredFields(), "&", "?");
+            parametersExtra = tracking.slug + "/" + tracking.trackingNumber + "/mark-as-completed" +
+                paramRequiredFields;
+            body.Add("reason", reason);
+
+            JObject response = request("POST", "/trackings/" + parametersExtra, body.ToString());
+            JObject trackingJSON = (JObject)response["data"]["tracking"];
+            Tracking trackingObj = null;
+            if (trackingJSON.Count != 0)
+            {
+                trackingObj = new Tracking(trackingJSON);
+            }
+
+            return trackingObj;
+        }
+
+        /// <summary>
+        /// Make a request to the HTTP API of Aftership
+        /// </summary>
+        ///<param name="method">String with the method of the request: GET, POST, PUT, DELETE</param>
+        ///<param name="urlResource">String with the URL of the request</param>
+        ///<param name="body">String JSON with the body of the request,
+        /// if the request doesn't need body "GET/DELETE", the bodywould be null</param>
+        /// <returns>A String JSON with the response of the request</returns>
+        ///
+        public JObject request(String method, String urlResource, String body)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			string url = _url  + VERSION_API + urlResource;

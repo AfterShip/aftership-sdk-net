@@ -123,6 +123,18 @@ namespace AftershipAPI
         /// Official tracking URL of the courier
         private String _courierTrackingLink;
 
+        /// Tracking origin country tracking_origin_country
+        private String _trackingOriginCountry;
+
+        /// Tracking destination country tracking_destination_country
+        private String _trackingDestinationCountry;
+
+        /// Tracking key tracking_key
+        private String _trackingKey;
+
+        // Tracking state tracking_state
+        private String _trackingState;
+
         public Tracking(String trackingNumber)
         {
             _trackingNumber = trackingNumber;
@@ -470,6 +482,30 @@ namespace AftershipAPI
             set { _checkpoints = value; }
         }
 
+        public String trackingOriginCountry
+        {
+            get { return _trackingOriginCountry; }
+            set { _trackingOriginCountry = value; }
+        }
+
+        public String trackingDestinationCountry
+        {
+            get { return _trackingDestinationCountry; }
+            set { _trackingDestinationCountry = value; }
+        }
+
+        public String trackingKey
+        {
+            get { return _trackingKey; }
+            set { _trackingKey = value; }
+        }
+
+        public String trackingState
+        {
+            get { return _trackingState; }
+            set { _trackingState = value; }
+        }
+
         public String getJSONPost()
         {
             JObject globalJSON = new JObject();
@@ -560,6 +596,21 @@ namespace AftershipAPI
                 containsInfo = true;
                 qs.add("tracking_account_number", this.trackingAccountNumber);
             }
+            if (this.trackingOriginCountry != null)
+            {
+                qs.add("tracking_origin_country", this.trackingOriginCountry);
+                containsInfo = true;
+            }
+            if (this.trackingDestinationCountry != null)
+            {
+                qs.add("tracking_destination_country", this.trackingDestinationCountry);
+                containsInfo = true;
+            }
+            if (this.trackingKey != null)
+            {
+                qs.add("tracking_key", this.trackingKey);
+                containsInfo = true;
+            }
             if (this.trackingPostalCode != null)
             {
                 qs.add("tracking_postal_code", this.trackingPostalCode);
@@ -568,6 +619,11 @@ namespace AftershipAPI
             if (this.trackingShipDate != null)
             {
                 qs.add("tracking_ship_date", this.trackingShipDate);
+                containsInfo = true;
+            }
+            if (this.trackingState != null)
+            {
+                qs.add("tracking_state", this.trackingState);
                 containsInfo = true;
             }
             if (containsInfo)
