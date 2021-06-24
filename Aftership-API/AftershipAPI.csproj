@@ -5,10 +5,10 @@
     <RootNamespace>Aftership_API</RootNamespace>
     <AssemblyName>Aftership-API</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <PackageId>AftershipChen</PackageId>
-    <PackageVersion>6.0.1</PackageVersion>
+    <PackageId>Aftership</PackageId>
+    <PackageVersion>6.0.0</PackageVersion>
     <Authors>Aftership Team</Authors>
-    <Copyright>Copyright 2020</Copyright>
+    <Copyright>Copyright © AfterShip 2020</Copyright>
     <Owners>Aftership</Owners>
     <Description>Aftership API, track your shipments</Description>
     <PackageTags>Aftership Track Tracking Courier Couriers</PackageTags>
