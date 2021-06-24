@@ -5,6 +5,16 @@
     <RootNamespace>Aftership_API</RootNamespace>
     <AssemblyName>Aftership-API</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PackageId>AftershipChen</PackageId>
+    <PackageVersion>6.0.1</PackageVersion>
+    <Authors>Aftership Team</Authors>
+    <Copyright>Copyright 2020</Copyright>
+    <Owners>Aftership</Owners>
+    <Description>Aftership API, track your shipments</Description>
+    <PackageTags>Aftership Track Tracking Courier Couriers</PackageTags>
+    <PackageIconUrl>https://images.ctfassets.net/3n0fku9d0jjr/3jnX6ydpyE00K88CMuGg84/c8d90c30b76991453d9f31703cdaa3ae/aftershiplogo-01.svg</PackageIconUrl>
+    <PackageProjectUrl>https://www.aftership.com</PackageProjectUrl>
+    <Title>Aftership-API</Title>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
