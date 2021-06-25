@@ -1,7 +1,7 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 5.0.5
+Aftership SDK .NET Version 6.0.0
 
 Before you start
 --------------
@@ -112,6 +112,9 @@ Examples of code
  	Tracking trackingMark = new Tracking("RC328021065CN");
  	trackingMark.slug = "canada-post";
  	connection.markTrackingAsCompeleted (trackingMark,"DELIVERED");
+
+#### 2021-06-24 v6.0.0
+- Upgrade Framework to .NET5
 
 #### 2021-04-30 v5.0.5
 - Add mark tracking as completed function.
