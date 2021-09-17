@@ -47,6 +47,12 @@ namespace AftershipAPI
         /// Normalized checkpoint message
         private String _subtag_message;
 
+        /// Current subtag of checkpoint
+        private String _subtag;
+
+        /// Checkpoint status provided by courier
+        private String _raw_tag;
+
         public Checkpoint(JObject checkpointJSON)
         {
             // Console.WriteLibe(typeof(checkpointJSON["created_at"]));
@@ -64,6 +70,8 @@ namespace AftershipAPI
             this.slug = checkpointJSON["slug"].IsNullOrEmpty() ? null : (String)checkpointJSON["slug"];
             this.location = checkpointJSON["location"].IsNullOrEmpty() ? null : (String)checkpointJSON["location"];
             this.subtagMessage = checkpointJSON["subtag_message"].IsNullOrEmpty() ? null : (String)checkpointJSON["subtag_message"];
+            this.subTag = checkpointJSON["subtag"].IsNullOrEmpty() ? null : (String)checkpointJSON["subtag"];
+            this.rawTag = checkpointJSON["raw_tag"].IsNullOrEmpty() ? null : (String)checkpointJSON["raw_tag"];
         }
 
         public DateTime createdAt
@@ -82,6 +90,18 @@ namespace AftershipAPI
         {
             get { return _city; }
             set { _city = value; }
+        }
+
+        public String subTag
+        {
+            get { return _subtag; }
+            set { _subtag = value; }
+        }
+
+        public String rawTag
+        {
+            get { return _raw_tag; }
+            set { _raw_tag = value; }
         }
 
         public ISO3Country countryISO3

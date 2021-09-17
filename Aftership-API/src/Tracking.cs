@@ -135,6 +135,77 @@ namespace AftershipAPI
         // Tracking state tracking_state
         private String _trackingState;
 
+        // Text field for the note
+        private String _note;
+
+        // Date and time the tracking was last updated
+        private DateTime _lastUpdatedAt;
+
+        // Total delivery time in days
+        private int _deliveryTime;
+
+        // Google cloud message registration IDs to receive the push notifications.
+        // Accept either array or comma separated as input.
+        private List<String> _android;
+
+        // Apple iOS device IDs to receive the push notifications.
+        // Accept either array or comma separated as input.
+        private List<String> _ios;
+
+        // Destination country of the tracking detected from the courier. ISO Alpha-3 (three letters).
+        // Value will be null if the courier doesn't provide the destination country.
+        private ISO3Country _courierDestinationCountryISO3;
+
+        // Date and time of the order created
+        private String _orderDate;
+
+        // Date and time the tracking was picked up
+        private String _shipmentPickupDate;
+
+        // Date and time the tracking was delivered
+        private String _shipmentDeliveryDate;
+
+        // Shipment weight provied by carrier
+        private Nullable<float> _shipmentWeight;
+
+        // Weight unit provied by carrier, either in kg or lb
+        private String _shipmentWeightUnit;
+
+        // Indicates if the shipment is trackable till the final destination
+        private Boolean _lastMileTrackingSupported;
+
+        // Store, customer, or order language of the tracking. ISO 639-1 Language Code
+        private String _language;
+
+        // Phone number(s) subscribed to receive sms notifications. Comma separated for multiple values
+        private List<String> _subscribedSmses;
+
+        // Email address(es) subscribed to receive email notifications. Comma separated for multiple values
+        private List<String> _subscribedEmails;
+
+        // Whether or not the shipment is returned to sender.
+        // Value is true when any of its checkpoints has subtag Exception_010 (returning to sender) or
+        // Exception_011 (returned to sender). Otherwis value is false
+        private Boolean _returnToSender;
+
+        // Promised delivery date of an order in YYYY-MM-DD format
+        private String _orderPromisedDeliveryDate;
+
+        // Shipment delivery type
+        private String _deliveryType;
+
+        // Shipment pickup location for receiver
+        private String _pickupLocation;
+
+        // Shipment pickup note for receiver
+        private String _pickupNote;
+
+        // Date and time of the first attempt by the carrier to deliver the package to the addressee
+        private String _firstAttemptedAt;
+
+        // Delivery instructions (delivery date or address) can be modified by visiting the link if supported by a carrier
+        private String _courierRedirectLink;
+
         public Tracking(String trackingNumber)
         {
             _trackingNumber = trackingNumber;
@@ -145,6 +216,7 @@ namespace AftershipAPI
         {
             String destination_country_iso3;
             String origin_country_iso3;
+            String courier_destination_country_iso3;
 
             this.id = trackingJSON["id"] == null ? null : (String)trackingJSON["id"];
 
@@ -167,6 +239,16 @@ namespace AftershipAPI
                 (String)trackingJSON["tracking_postal_code"];
             _trackingShipDate = trackingJSON["tracking_ship_date"] == null ? null :
                 (String)trackingJSON["tracking_ship_date"];
+            _note = trackingJSON["note"] == null ? null : (String)trackingJSON["note"];
+            _language = trackingJSON["language"] == null ? null : (String)trackingJSON["language"];
+            _orderPromisedDeliveryDate = trackingJSON["order_promised_delivery_date"] == null ? null : (String)trackingJSON["order_promised_delivery_date"];
+            _deliveryType = trackingJSON["delivery_type"] == null ? null : (String)trackingJSON["delivery_type"];
+            _pickupLocation = trackingJSON["pickup_location"] == null ? null : (String)trackingJSON["pickup_location"];
+            _pickupNote = trackingJSON["pickup_note"] == null ? null : (String)trackingJSON["pickup_note"];
+            _trackingOriginCountry = trackingJSON["tracking_origin_country"] == null ? null : (String)trackingJSON["tracking_origin_country"];
+            _trackingDestinationCountry = trackingJSON["tracking_destination_country"] == null ? null : (String)trackingJSON["tracking_destination_country"];
+            _trackingKey = trackingJSON["tracking_key"] == null ? null : (String)trackingJSON["tracking_key"];
+            _trackingState = trackingJSON["tracking_state"] == null ? null : (String)trackingJSON["tracking_state"];
 
             JArray smsesArray = trackingJSON["smses"] == null ? null : (JArray)trackingJSON["smses"];
             if (smsesArray != null && smsesArray.Count != 0)
@@ -185,6 +267,26 @@ namespace AftershipAPI
                 for (int i = 0; i < emailsArray.Count; i++)
                 {
                     _emails.Add((String)emailsArray[i]);
+                }
+            }
+
+            JArray subscribedSmsesArray = trackingJSON["subscribed_smses"] == null ? null : (JArray)trackingJSON["subscribed_smses"];
+            if (subscribedSmsesArray != null && subscribedSmsesArray.Count != 0)
+            {
+                _subscribedSmses = new List<String>();
+                for (int i = 0; i < subscribedSmsesArray.Count; i++)
+                {
+                    _subscribedSmses.Add((String)subscribedSmsesArray[i]);
+                }
+            }
+
+            JArray subscribedEmailsArray = trackingJSON["subscribed_emails"] == null ? null : (JArray)trackingJSON["subscribed_emails"];
+            if (subscribedEmailsArray != null && subscribedEmailsArray.Count != 0)
+            {
+                _subscribedEmails = new List<String>();
+                for (int i = 0; i < subscribedEmailsArray.Count; i++)
+                {
+                    _subscribedEmails.Add((String)subscribedEmailsArray[i]);
                 }
             }
 
@@ -228,6 +330,31 @@ namespace AftershipAPI
             _subtag = trackingJSON["subtag"].IsNullOrEmpty() ? null: (string)trackingJSON["subtag"];
             _subtagMessage = trackingJSON["subtag_message"].IsNullOrEmpty() ? null : (string)trackingJSON["subtag_message"];
             _courierTrackingLink = trackingJSON["courier_tracking_link"].IsNullOrEmpty() ? null : (string)trackingJSON["courier_tracking_link"];
+            _android = new List<String>();
+            _ios = new List<String>();
+            _deliveryTime = trackingJSON["delivery_time"].IsNullOrEmpty() ? 0 : (int)trackingJSON["tracked_count"];
+            _lastUpdatedAt = trackingJSON["last_updated_at"].IsNullOrEmpty() ? DateTime.MinValue : (DateTime)trackingJSON["last_updated_at"];
+            _orderDate = trackingJSON["order_date"].IsNullOrEmpty() ? null : (String)trackingJSON["order_date"];
+            _shipmentPickupDate = trackingJSON["shipment_pickup_date"].IsNullOrEmpty() ? null : (String)trackingJSON["shipment_pickup_date"];
+            _shipmentDeliveryDate = trackingJSON["shipment_delivery_date"].IsNullOrEmpty() ? null : (String)trackingJSON["shipment_delivery_date"];
+            _shipmentWeight = trackingJSON["shipment_weight"].IsNullOrEmpty() ? null : (float)trackingJSON["shipment_weight"];
+            _shipmentWeightUnit = trackingJSON["shipment_weight_unit"].IsNullOrEmpty() ? null : (String)trackingJSON["shipment_weight_unit"];
+            _lastMileTrackingSupported = trackingJSON["last_mile_tracking_supported"].IsNullOrEmpty() ? false : (Boolean)trackingJSON["last_mile_tracking_supported"];
+            _language = trackingJSON["language"].IsNullOrEmpty() ? null : (String)trackingJSON["language"];
+            _returnToSender = trackingJSON["return_to_sender"].IsNullOrEmpty() ? false : (Boolean)trackingJSON["return_to_sender"];
+            _orderPromisedDeliveryDate = trackingJSON["order_promised_delivery_date"].IsNullOrEmpty() ? null : (String)trackingJSON["order_promised_delivery_date"];
+            _deliveryType = trackingJSON["delivery_type"].IsNullOrEmpty() ? null : (String)trackingJSON["delivery_type"];
+            _pickupLocation = trackingJSON["pickup_location"].IsNullOrEmpty() ? null : (String)trackingJSON["pickup_location"];
+            _pickupNote = trackingJSON["pickup_note"].IsNullOrEmpty() ? null : (String)trackingJSON["pickup_note"];
+            _firstAttemptedAt = trackingJSON["first_attempted_at"].IsNullOrEmpty() ? null : (String)trackingJSON["first_attempted_at"];
+            _courierRedirectLink = trackingJSON["courier_redirect_link"].IsNullOrEmpty() ? null : (String)trackingJSON["courier_redirect_link"];
+
+            courier_destination_country_iso3 = (String)trackingJSON["courier_destination_country_iso3"];
+
+            if (courier_destination_country_iso3 != null && courier_destination_country_iso3 != String.Empty)
+            {
+                _courierDestinationCountryISO3 = (ISO3Country)Enum.Parse(typeof(ISO3Country), courier_destination_country_iso3);
+            }
 
             // checkpoints
             JArray checkpointsArray = trackingJSON["checkpoints"].IsNullOrEmpty() ? null :
@@ -311,6 +438,60 @@ namespace AftershipAPI
             if (_smses != null)
             {
                 _smses.Remove(smses);
+            }
+        }
+
+        public List<String> subscribedSmses
+        {
+            get { return _subscribedSmses; }
+            set { _subscribedSmses = value; }
+        }
+
+        public void addSubscribedSmses(String smses)
+        {
+            if (_subscribedSmses == null)
+            {
+                _subscribedSmses = new List<String>();
+                _subscribedSmses.Add(smses);
+            }
+            else
+            {
+                _subscribedSmses.Add(smses);
+            }
+        }
+
+        public void deleteSubscribedSmes(String smses)
+        {
+            if (_subscribedSmses != null)
+            {
+                _subscribedSmses.Remove(smses);
+            }
+        }
+
+        public List<String> subscribedEmails
+        {
+            get { return _subscribedEmails; }
+            set { _subscribedEmails = value; }
+        }
+
+        public void addSubscribedEmails(String emails)
+        {
+            if (_subscribedEmails == null)
+            {
+                _subscribedEmails = new List<String>();
+                _subscribedEmails.Add(emails);
+            }
+            else
+            {
+                _subscribedEmails.Add(emails);
+            }
+        }
+
+        public void deleteSubscribedEmails(String emails)
+        {
+            if (_subscribedEmails != null)
+            {
+                _subscribedEmails.Remove(emails);
             }
         }
 
@@ -506,6 +687,126 @@ namespace AftershipAPI
             set { _trackingState = value; }
         }
 
+        public String note
+        {
+            get { return _note; }
+            set { _note = value; }
+        }
+
+        public DateTime lastUpdatedAt
+        {
+            get { return _lastUpdatedAt; }
+            set { _lastUpdatedAt = value; }
+        }
+
+        public int deliveryTime
+        {
+            get { return _deliveryTime; }
+            set { _deliveryTime = value; }
+        }
+
+        public List<string> android
+        {
+            get { return _android; }
+            set { _android = value; }
+        }
+
+        public List<string> ios
+        {
+            get { return _ios; }
+            set { _ios = value; }
+        }
+
+        public ISO3Country courierDestinationCountryISO3
+        {
+            get { return _courierDestinationCountryISO3; }
+            set { _courierDestinationCountryISO3 = value; }
+        }
+
+        public String orderDate
+        {
+            get { return _orderDate; }
+            set { _orderDate = value; }
+        }
+
+        public String shipmentPickupDate
+        {
+            get { return _shipmentPickupDate; }
+            set { _shipmentPickupDate = value; }
+        }
+
+        public String shipmentDeliveryDate
+        {
+            get { return _shipmentDeliveryDate; }
+            set { _shipmentDeliveryDate = value; }
+        }
+
+        public float? shipmentWeight
+        {
+            get { return (float)_shipmentWeight; }
+            set { _shipmentWeight = value; }
+        }
+
+        public String shipmentWeightUnit
+        {
+            get { return _shipmentWeightUnit; }
+            set { _shipmentWeightUnit = value; }
+        }
+
+        public bool lastMileTrackingSupported
+        {
+            get { return _lastMileTrackingSupported; }
+            set { _lastMileTrackingSupported = value; }
+        }
+
+        public String language
+        {
+            get { return _language; }
+            set { _language = value; }
+        }
+
+        public bool returnToSender
+        {
+            get { return _returnToSender; }
+            set { _returnToSender = value; }
+        }
+
+        public String orderPromisedDeliveryDate
+        {
+            get { return _orderPromisedDeliveryDate; }
+            set { _orderPromisedDeliveryDate = value; }
+        }
+
+        public String deliveryType
+        {
+            get { return _deliveryType; }
+            set { _deliveryType = value; }
+        }
+
+        public String pickupLocation
+        {
+            get { return _pickupLocation; }
+            set { _pickupLocation = value; }
+        }
+
+        public String pickupNote
+        {
+            get { return _pickupNote; }
+            set { _pickupNote = value; }
+        }
+
+        public String firstAttemptedAt
+        {
+            get { return _firstAttemptedAt; }
+            set { _firstAttemptedAt = value; }
+        }
+
+        public String courierRedirectLink
+        {
+            get { return _courierRedirectLink; }
+            set { _courierRedirectLink = value; }
+        }
+
         public String getJSONPost()
         {
             JObject globalJSON = new JObject();
@@ -514,6 +815,13 @@ namespace AftershipAPI
             trackingJSON.Add("tracking_number", new JValue(_trackingNumber));
             if (_slug != null) trackingJSON.Add("slug", new JValue(_slug));
             if (_title != null) trackingJSON.Add("title", new JValue(_title));
+            if (_note != null) trackingJSON.Add("note", new JValue(_note));
+            if (_orderDate != null) trackingJSON.Add("order_date", new JValue(_orderDate));
+            if (_language != null) trackingJSON.Add("language", new JValue(_language));
+            if (_orderPromisedDeliveryDate != null) trackingJSON.Add("order_promised_delivery_date", new JValue(_orderPromisedDeliveryDate));
+            if (_deliveryType != null) trackingJSON.Add("delivery_type", new JValue(_deliveryType));
+            if (_pickupLocation != null) trackingJSON.Add("pickup_location", new JValue(_pickupLocation));
+            if (_pickupNote != null) trackingJSON.Add("pickup_note", new JValue(_pickupNote));
             if (_emails != null)
             {
                 JArray emailsJSON = new JArray(_emails);
@@ -527,12 +835,18 @@ namespace AftershipAPI
             if (_customerName != null) trackingJSON.Add("customer_name", new JValue(_customerName));
             if (_destinationCountryISO3 != 0)
                 trackingJSON.Add("destination_country_iso3", new JValue(_destinationCountryISO3.ToString()));
+            if (_originCountryISO3 != 0)
+                trackingJSON.Add("origin_country_iso3", new JValue(_originCountryISO3.ToString()));
             if (_orderID != null) trackingJSON.Add("order_id", new JValue(_orderID));
             if (_orderIDPath != null) trackingJSON.Add("order_id_path", new JValue(_orderIDPath));
 
             if (_trackingAccountNumber != null) trackingJSON.Add("tracking_account_number", new JValue(_trackingAccountNumber));
             if (_trackingPostalCode != null) trackingJSON.Add("tracking_postal_code", new JValue(trackingPostalCode));
             if (_trackingShipDate != null) trackingJSON.Add("tracking_ship_date", new JValue(trackingShipDate));
+            if (_trackingOriginCountry != null) trackingJSON.Add("tracking_origin_country", new JValue(_trackingOriginCountry));
+            if (_trackingDestinationCountry != null) trackingJSON.Add("tracking_destination_country", new JValue(_trackingDestinationCountry));
+            if (_trackingKey != null) trackingJSON.Add("tracking_key", new JValue(_trackingKey));
+            if (_trackingState != null) trackingJSON.Add("tracking_state", new JValue(_trackingState));
 
             if (_customFields != null)
             {
@@ -559,6 +873,22 @@ namespace AftershipAPI
             JObject customFieldsJSON;
 
             if (_title != null) trackingJSON.Add("title", new JValue(_title));
+            if (_note != null) trackingJSON.Add("note", new JValue(_note));
+            if (_language != null) trackingJSON.Add("language", new JValue(_language));
+            if (_orderPromisedDeliveryDate != null) trackingJSON.Add("order_promised_delivery_date", new JValue(_orderPromisedDeliveryDate));
+            if (_deliveryType != null) trackingJSON.Add("delivery_type", new JValue(_deliveryType));
+            if (_pickupLocation != null) trackingJSON.Add("pickup_location", new JValue(_pickupLocation));
+            if (_pickupNote != null) trackingJSON.Add("pickup_note", new JValue(_pickupNote));
+            if (_slug != null) trackingJSON.Add("slug", new JValue(_slug));
+
+            if (_trackingAccountNumber != null) trackingJSON.Add("tracking_account_number", new JValue(_trackingAccountNumber));
+            if (_trackingPostalCode != null) trackingJSON.Add("tracking_postal_code", new JValue(trackingPostalCode));
+            if (_trackingShipDate != null) trackingJSON.Add("tracking_ship_date", new JValue(trackingShipDate));
+            if (_trackingOriginCountry != null) trackingJSON.Add("tracking_origin_country", new JValue(_trackingOriginCountry));
+            if (_trackingDestinationCountry != null) trackingJSON.Add("tracking_destination_country", new JValue(_trackingDestinationCountry));
+            if (_trackingKey != null) trackingJSON.Add("tracking_key", new JValue(_trackingKey));
+            if (_trackingState != null) trackingJSON.Add("tracking_state", new JValue(_trackingState));
+
             if (_emails != null)
             {
                 JArray emailsJSON = new JArray(_emails);

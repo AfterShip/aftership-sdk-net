@@ -114,6 +114,9 @@ Examples of code
  	connection.markTrackingAsCompeleted (trackingMark,"DELIVERED");
 
 #### 2021-06-24 v6.0.0
+- Update tracking fields
+
+#### 2021-06-24 v6.0.0
 - Upgrade Framework to .NET5
 
 #### 2021-04-30 v5.0.5
