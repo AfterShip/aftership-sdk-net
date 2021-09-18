@@ -31,7 +31,7 @@ namespace Test
         String customProductPricePost = "USD19.99";
 
         //tracking numbers to detect
-        String trackingNumberToDetect = "09445246482536";
+        String trackingNumberToDetect = "92748902410411000226601999";
         String trackingNumberToDetectError = "asdq";
 
         //Tracking to Delete
@@ -221,8 +221,68 @@ namespace Test
             Tracking tracking2 = new Tracking(trackingNumberToDetect);
             Tracking trackingPosted2 = connection.createTracking(tracking2);
             Assert.AreEqual(trackingNumberToDetect, trackingPosted2.trackingNumber, "#A14");
-            Assert.AreEqual("dpd", trackingPosted2.slug, "#A15");//the system assign dpd (it exist)
+            Assert.AreEqual("usps", trackingPosted2.slug, "#A15");//the system assign dpd (it exist)
+            try
+            {
+                connection.deleteTracking(trackingPosted2);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
+        }
+
+        [TestMethod]
+        public void TestCreateTrackingWithAllFields()
+        {
+            String trackingNumber = "9374889680005800658136";
+            //test post with all fields
+            Tracking tracking = new Tracking(trackingNumber);
+            tracking.slug = "usps";
+            tracking.title = "sample title";
+            tracking.orderID = "4029727637682";
+            tracking.orderIDPath = "https://hxzuo8823.aftership.com/9374889681005855144409";
+            tracking.addCustomFields("item_names", "短袖T恤");
+            tracking.addEmails("test@aftership.com");
+            tracking.addSubscribedEmails("test@aftership.com");
+            tracking.addEmails("test@aftership.com");
+            tracking.language = "zh";
+            tracking.orderPromisedDeliveryDate = "2021-09-30";
+            tracking.deliveryType = "pickup_at_store";
+            tracking.pickupLocation = "shenzhen";
+            tracking.pickupNote = "carefully";
+            tracking.customerName = "watson";
+            tracking.originCountryISO3 = ISO3Country.CHN;
+            tracking.destinationCountryISO3 = ISO3Country.CHN;
+            tracking.note = "sample note";
+            tracking.orderDate = "2021-09-26T11:23:51Z";
+
+            Tracking trackingPosted = connection.createTracking(tracking);
+            Assert.AreEqual(trackingNumber, trackingPosted.trackingNumber, "#A14");
+            Assert.AreEqual("usps", trackingPosted.slug, "#A15");
+            Assert.AreEqual("sample title", trackingPosted.title, "#A16");
+            Assert.AreEqual("4029727637682", trackingPosted.orderID, "#A17");
+            Assert.AreEqual("https://hxzuo8823.aftership.com/9374889681005855144409", trackingPosted.orderIDPath, "#A18");
+            Assert.IsNotNull(trackingPosted.customFields);
+            Assert.AreEqual("zh", trackingPosted.language, "#A19");
+            Assert.AreEqual("2021-09-30", trackingPosted.orderPromisedDeliveryDate, "#A20");
+            Assert.AreEqual("pickup_at_store", trackingPosted.deliveryType, "#A21");
+            Assert.AreEqual("shenzhen", trackingPosted.pickupLocation, "#A22");
+            Assert.AreEqual("carefully", trackingPosted.pickupNote, "#A23");
+            Assert.AreEqual("watson", trackingPosted.customerName, "#A24");
+            Assert.AreEqual(ISO3Country.CHN, trackingPosted.originCountryISO3, "#A25");
+            Assert.AreEqual(ISO3Country.CHN, trackingPosted.destinationCountryISO3, "#A26");
+            Assert.AreEqual("sample note", trackingPosted.note, "#A27");
+            Assert.AreEqual("09/26/2021 11:23:51", trackingPosted.orderDate, "#A28");
+            try
+            {
+                connection.deleteTracking(trackingPosted);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
         }
 
@@ -241,7 +301,7 @@ namespace Test
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Assert.AreEqual("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\",\"title\":\"asdq\"}}}",
+                Assert.AreEqual("{\"meta\":{\"code\":4012,\"message\":\"Cannot detect courier. Activate courier at https://secure.aftership.com/settings/courier\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\",\"title\":\"asdq\"}}}",
                     e.Message, "#A17");
             }
         }
@@ -292,7 +352,7 @@ namespace Test
             }
             catch (Exception e)
             {
-                Assert.AreEqual("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{}}",
+                Assert.AreEqual("{\"meta\":{\"code\":4004,\"message\":\"Tracking does not exist.\",\"type\":\"NotFound\"},\"data\":{}}",
                     e.Message, "#A22");
             }
         }
@@ -300,16 +360,14 @@ namespace Test
         [TestMethod]
         public void testGetTrackingByNumber()
         {
-            String trackingNumber = "3799517046";
-            String slug = "dhl";
+            String trackingNumber = "9300120111406558526311";
+            String slug = "usps";
 
             Tracking trackingGet1 = new Tracking(trackingNumber);
             trackingGet1.slug = slug;
-
             Tracking tracking = connection.getTrackingByNumber(trackingGet1);
             Assert.AreEqual(trackingNumber, tracking.trackingNumber, "#A23");
             Assert.AreEqual(slug, tracking.slug, "#A24");
-            Assert.AreEqual(null, tracking.shipmentType, "#A25");
 
             List<Checkpoint> checkpoints = tracking.checkpoints;
             Checkpoint lastCheckpoint = checkpoints[checkpoints.Count - 1];
@@ -358,56 +416,23 @@ namespace Test
             catch (Exception e)
             {
                 Console.Write(e.Message);
-                Assert.AreEqual("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{}}",
+                Assert.AreEqual("{\"meta\":{\"code\":4004,\"message\":\"Tracking does not exist.\",\"type\":\"NotFound\"},\"data\":{}}",
                     e.Message, "#A29");
             }
         }
 
-        [TestMethod]
+                [TestMethod]
         public void testGetLastCheckpointID()
         {
             Tracking trackingGet1 = new Tracking("whatever");
-            trackingGet1.id = "5550529d74346ecd5099ab47";
+            trackingGet1.id = "l2go9phz0c0ajktjsgt0z02f";
             Checkpoint newCheckpoint = connection.getLastCheckpoint(trackingGet1);
             Assert.IsTrue(!string.IsNullOrEmpty(newCheckpoint.message));
-            Assert.AreEqual(null, newCheckpoint.countryName);
+            Assert.AreEqual("USA", newCheckpoint.countryName);
             Assert.AreEqual("Delivered", newCheckpoint.tag);
+            Assert.AreEqual("Delivered_001", newCheckpoint.subTag);
         }
-
-        [TestMethod]
-        public void testGetLastCheckpoint2ID()
-        {
-            List<FieldCheckpoint> fields = new List<FieldCheckpoint>();
-            fields.Add(FieldCheckpoint.message);
-            Tracking trackingGet1 = new Tracking("whatever");
-            trackingGet1.id = "555035fe74346ecd50998680";
-
-            Checkpoint newCheckpoint1 = connection.getLastCheckpoint(trackingGet1, fields, "");
-            Assert.IsTrue(!string.IsNullOrEmpty(newCheckpoint1.message));
-            Assert.AreEqual("0001-01-01T00:00:00+08:00", DateMethods.ToString(newCheckpoint1.createdAt));
-
-            fields.Add(FieldCheckpoint.created_at);
-            Checkpoint newCheckpoint2 = connection.getLastCheckpoint(trackingGet1, fields, "");
-            Assert.IsTrue(!string.IsNullOrEmpty(newCheckpoint2.message));
-            Assert.AreNotEqual("0001-01-01T00:00:00+00:00", DateMethods.ToString(newCheckpoint2.createdAt));
-            Assert.IsTrue(!string.IsNullOrEmpty(DateMethods.ToString(newCheckpoint2.createdAt)));
-
-        }
-
-        [TestMethod]
-        public void testGetLastCheckpoint3ID()
-        {
-            List<FieldCheckpoint> fields = new List<FieldCheckpoint>();
-            fields.Add(FieldCheckpoint.message);
-            Tracking trackingGet1 = new Tracking("whatever");
-            trackingGet1.id = "5550361716f0d77344cb80ad";
-
-
-            Checkpoint newCheckpoint1 = connection.getLastCheckpoint(trackingGet1, fields, "");
-            Assert.IsTrue(!string.IsNullOrEmpty(newCheckpoint1.message));
-
-        }
-
+        
         [TestMethod]
         public void testGetTrackings()
         {
@@ -424,8 +449,8 @@ namespace Test
         [TestMethod]
         public void testPutTracking()
         {
-            Tracking tracking = new Tracking("00340433836621378669");
-            tracking.slug = "dhl-germany";
+            Tracking tracking = new Tracking("9400110897700003231250");
+            tracking.slug = "usps";
             tracking.title = "another title";
 
             Tracking tracking2 = connection.putTracking(tracking);
@@ -456,8 +481,6 @@ namespace Test
             //check first courier
             Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].slug));
             Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].name));
-            Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].phone));
-            Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].other_name));
             Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].web_url));
 
             //total Couriers returned
@@ -481,13 +504,11 @@ namespace Test
 
             List<Courier> couriers = connection.getCouriers();
             //total Couriers returned
-            Assert.IsTrue(couriers.Count > 30);
+            Assert.IsTrue(couriers.Count > 10);
             //check first courier
 
             Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].slug));
             Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].name));
-            Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].phone));
-            Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].other_name));
             Assert.IsTrue(!string.IsNullOrEmpty(couriers[0].web_url));
 
             //try to acces with a bad API Key
@@ -509,7 +530,7 @@ namespace Test
         {
 
             ParametersTracking parameters = new ParametersTracking();
-            parameters.addSlug("dhl");
+            parameters.addSlug("usps");
             DateTime date = DateTime.Today.AddMonths(-1);
 
 
@@ -559,13 +580,13 @@ namespace Test
         {
 
             ParametersTracking param4 = new ParametersTracking();
-            param4.keyword = "title";
+            param4.keyword = "09445246482536";
             param4.addField(FieldTracking.title);
-            param4.limit = 50;
+            param4.limit = 2;
 
             List<Tracking> totalOutDelivery2 = connection.getTrackings(param4);
             //  Assert.AreEqual( 2, totalOutDelivery2.Count);
-            Assert.AreEqual("this title", totalOutDelivery2[0].title);
+            Assert.AreEqual("09445246482536", totalOutDelivery2[0].title);
         }
 
         [TestMethod]
@@ -611,8 +632,8 @@ namespace Test
         public void testRetrack()
         {
 
-            Tracking tracking = new Tracking("00340433836621378669");
-            tracking.slug = "dhl-germany";
+            Tracking tracking = new Tracking("9400110897700003231250");
+            tracking.slug = "usps";
             try
             {
                 connection.retrack(tracking);
@@ -622,8 +643,8 @@ namespace Test
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Assert.IsTrue(e.Message.Contains("4016"));
-                Assert.IsTrue(e.Message.Contains("Retrack is not allowed. You can only retrack each shipment once."));
+                Assert.IsTrue(e.Message.Contains("4013"));
+                Assert.IsTrue(e.Message.Contains("Retrack is not allowed. You can only retrack an inactive tracking."));
 
             }
         }

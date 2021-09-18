@@ -113,6 +113,12 @@ Examples of code
  	trackingMark.slug = "canada-post";
  	connection.markTrackingAsCompeleted (trackingMark,"DELIVERED");
 
+#### 2021-09-18 v6.0.1
+- Update tracking fields
+
+#### 2021-06-24 v6.0.0
+- Upgrade Framework to .NET5
+
 #### 2021-04-30 v5.0.5
 - Add mark tracking as completed function.
 
