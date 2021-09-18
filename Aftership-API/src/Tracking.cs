@@ -16,6 +16,7 @@ namespace AftershipAPI
                    (token.Type == JTokenType.Array && !token.HasValues) ||
                    (token.Type == JTokenType.Object && !token.HasValues) ||
                    (token.Type == JTokenType.String && token.ToString() == String.Empty) ||
+                   (token.Type == JTokenType.Float && !token.HasValues) ||
                    (token.Type == JTokenType.Null);
         }
     }
@@ -337,7 +338,7 @@ namespace AftershipAPI
             _orderDate = trackingJSON["order_date"].IsNullOrEmpty() ? null : (String)trackingJSON["order_date"];
             _shipmentPickupDate = trackingJSON["shipment_pickup_date"].IsNullOrEmpty() ? null : (String)trackingJSON["shipment_pickup_date"];
             _shipmentDeliveryDate = trackingJSON["shipment_delivery_date"].IsNullOrEmpty() ? null : (String)trackingJSON["shipment_delivery_date"];
-            _shipmentWeight = trackingJSON["shipment_weight"].IsNullOrEmpty() ? null : (float)trackingJSON["shipment_weight"];
+            _shipmentWeight = trackingJSON["shipment_weight"].IsNullOrEmpty() ? float.NaN : (float)trackingJSON["shipment_weight"];
             _shipmentWeightUnit = trackingJSON["shipment_weight_unit"].IsNullOrEmpty() ? null : (String)trackingJSON["shipment_weight_unit"];
             _lastMileTrackingSupported = trackingJSON["last_mile_tracking_supported"].IsNullOrEmpty() ? false : (Boolean)trackingJSON["last_mile_tracking_supported"];
             _language = trackingJSON["language"].IsNullOrEmpty() ? null : (String)trackingJSON["language"];
