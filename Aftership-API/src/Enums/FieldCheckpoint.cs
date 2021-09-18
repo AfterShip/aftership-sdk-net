@@ -13,7 +13,12 @@ namespace AftershipAPI.Enums
         message,
         state,
         tag,
-        zip
+        zip,
+        slug,
+        location,
+        subtag,
+        subtag_message,
+        raw_tag
     }
 }
 
