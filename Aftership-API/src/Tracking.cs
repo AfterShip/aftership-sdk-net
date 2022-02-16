@@ -25,42 +25,42 @@ namespace AftershipAPI
     /// </summary>
     public class Tracking
     {
-        ///Tracking ID in the Afthership system 
+        ///Tracking ID in the Afthership system
         private String _id;
 
         ///Tracking number of a shipment. Duplicate tracking numbers, or tracking number with invalid tracking
-        ///number format will not be accepted. 
+        ///number format will not be accepted.
         private String _trackingNumber;
 
         ///Unique code of each courier. If you do not specify a slug, Aftership will automatically detect
         ///the courier based on the tracking number format and your selected couriers
         private String _slug;
 
-        /// Email address(es) to receive email notifications. Use comma for multiple emails. 
+        /// Email address(es) to receive email notifications. Use comma for multiple emails.
         private List<String> _emails;
 
         /// Phone number(s) to receive sms notifications. Use comma for multiple emails.
-        ///Enter + area code before phone number. 
+        ///Enter + area code before phone number.
         private List<String> _smses;
 
-        /// Title of the tracking. Default value as trackingNumber 
+        /// Title of the tracking. Default value as trackingNumber
         private String _title;
 
-        /// Customer name of the tracking. 
+        /// Customer name of the tracking.
         private String _customerName;
 
         /// ISO Alpha-3(three letters)to specify the destination of the shipment.
         /// If you use postal service to send international shipments, AfterShip will automatically
-        /// get tracking results at destination courier as well (e.g. USPS for USA). 
+        /// get tracking results at destination courier as well (e.g. USPS for USA).
         private ISO3Country _destinationCountryISO3;
 
-        ///  Origin country of the tracking. ISO Alpha-3 
+        ///  Origin country of the tracking. ISO Alpha-3
         private ISO3Country _originCountryISO3;
 
-        /// Text field for order ID 
+        /// Text field for order ID
         private String _orderID;
 
-        /// Text field for order path 
+        /// Text field for order path
         private String _orderIDPath;
 
         /// Custom fields that accept any TEXT STRING
@@ -68,38 +68,38 @@ namespace AftershipAPI
 
         /// fields informed by Aftership API
 
-        ///  Date and time of the tracking created. 
+        ///  Date and time of the tracking created.
         private DateTime _createdAt;
 
-        /// Date and time of the tracking last updated. 
+        /// Date and time of the tracking last updated.
         private DateTime _updatedAt;
 
         /// Whether or not AfterShip will continue tracking the shipments.
-        ///Value is `false` when status is `Delivered` or `Expired`. 
+        ///Value is `false` when status is `Delivered` or `Expired`.
         private bool _active;
 
-        /// Expected delivery date (if any). 
+        /// Expected delivery date (if any).
         private String _expectedDelivery;
 
-        ///  Number	Number of packages under the tracking. 
+        ///  Number	Number of packages under the tracking.
         private int _shipmentPackageCount;
 
-        /// Shipment type provided by carrier (if any). 
+        /// Shipment type provided by carrier (if any).
         private String _shipmentType;
 
-        /// Signed by information for delivered shipment (if any). 
+        /// Signed by information for delivered shipment (if any).
         private String _signedBy;
 
-        ///  Source of how this tracking is added.  
+        ///  Source of how this tracking is added.
         private String _source;
 
-        /// Current status of tracking. 
+        /// Current status of tracking.
         private StatusTag _tag;
 
-        ///  Number of attempts AfterShip tracks at courier's system. 
+        ///  Number of attempts AfterShip tracks at courier's system.
         private int _trackedCount;
 
-        /// Array of Hash describes the checkpoint information. 
+        /// Array of Hash describes the checkpoint information.
         List<Checkpoint> _checkpoints;
 
         ///Unique Token
@@ -117,7 +117,7 @@ namespace AftershipAPI
         /// Current subtag of tracking
         private String _subtag;
 
-        /// Normalized tracking message 
+        /// Normalized tracking message
         private String _subtagMessage;
 
         /// Official tracking URL of the courier
@@ -205,6 +205,9 @@ namespace AftershipAPI
 
         // Delivery instructions (delivery date or address) can be modified by visiting the link if supported by a carrier
         private String _courierRedirectLink;
+
+        // Estimated delivery time of the shipment provided by AfterShip, indicate when the shipment should arrive.
+        private EstimatedDeliveryDate _estimatedDeliveryDate;
 
         public Tracking(String trackingNumber)
         {
@@ -348,6 +351,9 @@ namespace AftershipAPI
             _pickupNote = trackingJSON["pickup_note"].IsNullOrEmpty() ? null : (String)trackingJSON["pickup_note"];
             _firstAttemptedAt = trackingJSON["first_attempted_at"].IsNullOrEmpty() ? null : (String)trackingJSON["first_attempted_at"];
             _courierRedirectLink = trackingJSON["courier_redirect_link"].IsNullOrEmpty() ? null : (String)trackingJSON["courier_redirect_link"];
+            _estimatedDeliveryDate = trackingJSON["aftership_estimated_delivery_date"].IsNullOrEmpty()
+                ? null
+                : new EstimatedDeliveryDate((JObject)trackingJSON["aftership_estimated_delivery_date"]);
 
             courier_destination_country_iso3 = (String)trackingJSON["courier_destination_country_iso3"];
 
@@ -805,6 +811,12 @@ namespace AftershipAPI
         {
             get { return _courierRedirectLink; }
             set { _courierRedirectLink = value; }
+        }
+
+        public EstimatedDeliveryDate estimatedDeliveryDate
+        {
+            get { return _estimatedDeliveryDate; }
+            set { _estimatedDeliveryDate = value; }
         }
 
         public String getJSONPost()
