@@ -17,6 +17,7 @@ namespace AftershipAPI.Enums
 		expected_delivery,
 		order_id,
 		order_id_path,
+		order_number,
 		origin_country_iso3,
 		shipment_package_count,
 		shipment_type,
