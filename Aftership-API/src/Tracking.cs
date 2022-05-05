@@ -63,6 +63,9 @@ namespace AftershipAPI
         /// Text field for order path
         private String _orderIDPath;
 
+        /// Text field for order path
+        private String _orderNumber;
+
         /// Custom fields that accept any TEXT STRING
         private Dictionary<String, String> _customFields;
 
@@ -236,6 +239,7 @@ namespace AftershipAPI
             }
             _orderID = trackingJSON["order_id"] == null ? null : (String)trackingJSON["order_id"];
             _orderIDPath = trackingJSON["order_id_path"] == null ? null : (String)trackingJSON["order_id_path"];
+            _orderNumber = trackingJSON["order_number"] == null ? null : (String)trackingJSON["order_number"];
             _trackingAccountNumber = trackingJSON["tracking_account_number"] == null ? null :
                 (String)trackingJSON["tracking_account_number"];
             _trackingPostalCode = trackingJSON["tracking_postal_code"] == null ? null :
@@ -851,7 +855,7 @@ namespace AftershipAPI
                 trackingJSON.Add("origin_country_iso3", new JValue(_originCountryISO3.ToString()));
             if (_orderID != null) trackingJSON.Add("order_id", new JValue(_orderID));
             if (_orderIDPath != null) trackingJSON.Add("order_id_path", new JValue(_orderIDPath));
-
+            if (_orderNumber != null) trackingJSON.Add("order_number", new JValue(_orderNumber));
             if (_trackingAccountNumber != null) trackingJSON.Add("tracking_account_number", new JValue(_trackingAccountNumber));
             if (_trackingPostalCode != null) trackingJSON.Add("tracking_postal_code", new JValue(trackingPostalCode));
             if (_trackingShipDate != null) trackingJSON.Add("tracking_ship_date", new JValue(trackingShipDate));
@@ -914,6 +918,7 @@ namespace AftershipAPI
             if (_customerName != null) trackingJSON.Add("customer_name", new JValue(_customerName));
             if (_orderID != null) trackingJSON.Add("order_id", new JValue(_orderID));
             if (_orderIDPath != null) trackingJSON.Add("order_id_path", new JValue(_orderIDPath));
+            if (_orderNumber != null) trackingJSON.Add("order_number", new JValue(_orderNumber));
             if (_customFields != null)
             {
                 customFieldsJSON = new JObject();
