@@ -113,6 +113,12 @@ Examples of code
  	trackingMark.slug = "canada-post";
  	connection.markTrackingAsCompeleted (trackingMark,"DELIVERED");
 
+#### 2022-05-07 v6.0.3
+- Update tracking fields
+
+#### 2022-02-16 v6.0.2
+- Update tracking fields
+
 #### 2021-09-18 v6.0.1
 - Update tracking fields
 
