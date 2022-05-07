@@ -44,7 +44,7 @@ namespace AftershipAPI
         /// Unique code of each courier. If you do not specify a slug, Aftership will automatically detect
         /// the courier based on the tracking number format and your selected couriers
         private String _slug;
-        
+
         /// fields informed by Aftership API
         /// Whether or not AfterShip will continue tracking the shipments.
         /// Value is `false` when status is `Delivered` or `Expired`.
@@ -67,6 +67,9 @@ namespace AftershipAPI
         /// If you use postal service to send international shipments, AfterShip will automatically
         /// get tracking results at destination courier as well (e.g. USPS for USA).
         private ISO3Country _destinationCountryISO3;
+
+        /// Shipping address that the shipment is shipping to.
+        private String _destinationRawLocation;
 
         /// Destination country of the tracking detected from the courier. ISO Alpha-3 (three letters).
         /// Value will be null if the courier doesn't provide the destination country.
@@ -180,7 +183,7 @@ namespace AftershipAPI
 
         /// Date and time of the first attempt by the carrier to deliver the package to the addressee
         private String _firstAttemptedAt;
-        
+
         /// Delivery instructions (delivery date or address) can be modified by visiting the link if supported by a carrier
         private String _courierRedirectLink;
 
@@ -205,9 +208,17 @@ namespace AftershipAPI
         /// Tracking state tracking_state
         private String _trackingState;
 
+        /// Whether the tracking is delivered on time or not.
+        private String _onTimeStatus;
+
+        /// The difference days of the on time.
+        private int? _onTimeDifference;
+
+        private List<String> _orderTags;
+
         /// Estimated delivery time of the shipment provided by AfterShip, indicate when the shipment should arrive.
         private EstimatedDeliveryDate _estimatedDeliveryDate;
-        
+
         /// The unique numeric identifier for the order for use by shop owner and customer. 
         private String _orderNumber;
 
@@ -237,9 +248,13 @@ namespace AftershipAPI
                 _destinationCountryISO3 = (ISO3Country) Enum.Parse(typeof(ISO3Country), destination_country_iso3);
             }
 
+            _destinationRawLocation = trackingJSON["destination_raw_location"] == null
+                ? null
+                : (String) trackingJSON["destination_raw_location"];
+
             _orderID = trackingJSON["order_id"] == null ? null : (String) trackingJSON["order_id"];
             _orderIDPath = trackingJSON["order_id_path"] == null ? null : (String) trackingJSON["order_id_path"];
-            _orderNumber = trackingJSON["order_number"] == null ? null : (String)trackingJSON["order_number"];
+            _orderNumber = trackingJSON["order_number"] == null ? null : (String) trackingJSON["order_number"];
             _trackingAccountNumber = trackingJSON["tracking_account_number"] == null
                 ? null
                 : (String) trackingJSON["tracking_account_number"];
@@ -432,6 +447,23 @@ namespace AftershipAPI
                     _checkpoints.Add(new Checkpoint((JObject) checkpointsArray[i]));
                 }
             }
+
+            _onTimeStatus = trackingJSON["on_time_status"].IsNullOrEmpty()
+                ? null
+                : (String) trackingJSON["on_time_status"];
+            _onTimeDifference = (int?) trackingJSON["_on_time_difference"];
+
+            JArray orderTagsArray = trackingJSON["order_tags"].IsNullOrEmpty()
+                ? null
+                : (JArray) trackingJSON["order_tags"];
+            if (orderTagsArray != null && orderTagsArray.Count != 0)
+            {
+                _orderTags = new List<String>();
+                for (int i = 0; i < orderTagsArray.Count; i++)
+                {
+                    _orderTags.Add((String) orderTagsArray[i]);
+                }
+            }
         }
 
 
@@ -577,6 +609,12 @@ namespace AftershipAPI
         {
             get { return _destinationCountryISO3; }
             set { _destinationCountryISO3 = value; }
+        }
+
+        public String destinationRawLocation
+        {
+            get { return _destinationRawLocation; }
+            set { _destinationRawLocation = value; }
         }
 
         public String orderID
@@ -877,6 +915,30 @@ namespace AftershipAPI
         {
             get { return _estimatedDeliveryDate; }
             set { _estimatedDeliveryDate = value; }
+        }
+
+        public String onTimeStatus
+        {
+            get { return _onTimeStatus; }
+            set { _onTimeStatus = value; }
+        }
+
+        public String orderNumber
+        {
+            get { return _orderNumber; }
+            set { _orderNumber = value; }
+        }
+
+        public int? onTimeDifference
+        {
+            get { return _onTimeDifference; }
+            set { _onTimeDifference = value; }
+        }
+
+        public List<String> orderTags
+        {
+            get { return _orderTags; }
+            set { _orderTags = value; }
         }
 
         public String getJSONPost()
