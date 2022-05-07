@@ -6,7 +6,7 @@
     <AssemblyName>Aftership-API</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PackageId>Aftership</PackageId>
-    <PackageVersion>6.0.2</PackageVersion>
+    <PackageVersion>6.0.3</PackageVersion>
     <Authors>Aftership Team</Authors>
     <Copyright>Copyright 2020</Copyright>
     <Owners>Aftership</Owners>
