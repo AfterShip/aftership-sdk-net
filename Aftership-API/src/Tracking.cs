@@ -222,6 +222,8 @@ namespace AftershipAPI
         /// The unique numeric identifier for the order for use by shop owner and customer. 
         private String _orderNumber;
 
+        private LatestEstimatedDelivery _latestEstimatedDelivery;
+
         public Tracking(String trackingNumber)
         {
             _trackingNumber = trackingNumber;
@@ -464,6 +466,10 @@ namespace AftershipAPI
                     _orderTags.Add((String) orderTagsArray[i]);
                 }
             }
+            
+            _latestEstimatedDelivery = trackingJSON["latest_estimated_delivery"].IsNullOrEmpty()
+                ? null
+                : new LatestEstimatedDelivery((JObject) trackingJSON["latest_estimated_delivery"]);
         }
 
 
@@ -939,6 +945,12 @@ namespace AftershipAPI
         {
             get { return _orderTags; }
             set { _orderTags = value; }
+        }
+        
+        public LatestEstimatedDelivery latestEstimatedDelivery
+        {
+            get { return _latestEstimatedDelivery; }
+            set { _latestEstimatedDelivery = value; }
         }
 
         public String getJSONPost()
