@@ -3,17 +3,18 @@ using AftershipAPI;
 using AftershipAPI.Enums;
 using System;
 using System.Collections.Generic;
+using AftershipAPI.Params;
+using Newtonsoft.Json.Linq;
 
 namespace Test
 {
     [TestClass]
     public class TestConnectionAPI
     {
-
-        ConnectionAPI connection; 
+        ConnectionAPI connection;
         //static int TOTAL_COURIERS_API = 225;
 
-        String[] couriersDetected = { "dpd", "fedex" };
+        String[] couriersDetected = {"dpd", "fedex"};
 
         //post tracking number
         String trackingNumberPost = "05167019264110";
@@ -141,7 +142,6 @@ namespace Test
         [TestMethod]
         public void testDetectCouriers()
         {
-
             //get trackings of this number.
             List<Courier> couriers = connection.detectCouriers(trackingNumberToDetect);
             Assert.AreEqual(3, couriers.Count);
@@ -150,9 +150,9 @@ namespace Test
             Console.WriteLine("**1" + couriers[1].slug);
 
             Assert.IsTrue(Equals(couriers[0].slug, couriersDetected[0])
-                || Equals(couriers[1].slug, couriersDetected[0]));
+                          || Equals(couriers[1].slug, couriersDetected[0]));
             Assert.IsTrue(Equals(couriers[0].slug, couriersDetected[1])
-                || Equals(couriersDetected[1], couriers[1].slug));
+                          || Equals(couriersDetected[1], couriers[1].slug));
 
             //if the trackingNumber doesn't match any courier defined, should give an error.
 
@@ -163,7 +163,9 @@ namespace Test
             }
             catch (Exception e)
             {
-                Assert.AreEqual("{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\"}}}", e.Message);
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":4005,\"message\":\"The value of `tracking_number` is invalid.\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\"}}}",
+                    e.Message);
             }
 
             List<String> slugs = new List<String>();
@@ -175,6 +177,7 @@ namespace Test
             List<Courier> couriers2 = connection.detectCouriers(trackingNumberToDetect, "28046", "", null, slugs);
             Assert.AreEqual(1, couriers2.Count);
         }
+
         [TestMethod]
         public void TestCreateTracking()
         {
@@ -221,7 +224,7 @@ namespace Test
             Tracking tracking2 = new Tracking(trackingNumberToDetect);
             Tracking trackingPosted2 = connection.createTracking(tracking2);
             Assert.AreEqual(trackingNumberToDetect, trackingPosted2.trackingNumber, "#A14");
-            Assert.AreEqual("usps", trackingPosted2.slug, "#A15");//the system assign dpd (it exist)
+            Assert.AreEqual("usps", trackingPosted2.slug, "#A15"); //the system assign dpd (it exist)
             try
             {
                 connection.deleteTracking(trackingPosted2);
@@ -230,7 +233,6 @@ namespace Test
             {
                 Console.WriteLine(e.Message);
             }
-
         }
 
         [TestMethod]
@@ -263,7 +265,8 @@ namespace Test
             Assert.AreEqual("usps", trackingPosted.slug, "#A15");
             Assert.AreEqual("sample title", trackingPosted.title, "#A16");
             Assert.AreEqual("4029727637682", trackingPosted.orderID, "#A17");
-            Assert.AreEqual("https://hxzuo8823.aftership.com/9374889681005855144409", trackingPosted.orderIDPath, "#A18");
+            Assert.AreEqual("https://hxzuo8823.aftership.com/9374889681005855144409", trackingPosted.orderIDPath,
+                "#A18");
             Assert.IsNotNull(trackingPosted.customFields);
             Assert.AreEqual("zh", trackingPosted.language, "#A19");
             Assert.AreEqual("2021-09-30", trackingPosted.orderPromisedDeliveryDate, "#A20");
@@ -283,7 +286,6 @@ namespace Test
             {
                 Console.WriteLine(e.Message);
             }
-
         }
 
         //test post tracking number doesn't exist
@@ -301,7 +303,8 @@ namespace Test
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Assert.AreEqual("{\"meta\":{\"code\":4012,\"message\":\"Cannot detect courier. Activate courier at https://secure.aftership.com/settings/courier\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\",\"title\":\"asdq\"}}}",
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":4012,\"message\":\"Cannot detect courier. Activate courier at https://secure.aftership.com/settings/courier\",\"type\":\"BadRequest\"},\"data\":{\"tracking\":{\"tracking_number\":\"asdq\",\"title\":\"asdq\"}}}",
                     e.Message, "#A17");
             }
         }
@@ -310,12 +313,10 @@ namespace Test
         [TestMethod]
         public void testDeleteTracking()
         {
-
             //delete a tracking number (posted in the setup)
             Tracking deleteTracking = new Tracking(trackingNumberDelete);
             deleteTracking.slug = slugDelete;
             Assert.IsTrue(connection.deleteTracking(deleteTracking), "#A18");
-
         }
 
         [TestMethod]
@@ -331,16 +332,15 @@ namespace Test
             }
             catch (Exception e)
             {
-                Assert.AreEqual("{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//798865638020\"}}",
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//798865638020\"}}",
                     e.Message, "#A20");
             }
-
         }
 
         [TestMethod]
         public void testDeleteTracking2()
         {
-
             //if the trackingNumber is bad informed
             try
             {
@@ -352,7 +352,8 @@ namespace Test
             }
             catch (Exception e)
             {
-                Assert.AreEqual("{\"meta\":{\"code\":4004,\"message\":\"Tracking does not exist.\",\"type\":\"NotFound\"},\"data\":{}}",
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":4004,\"message\":\"Tracking does not exist.\",\"type\":\"NotFound\"},\"data\":{}}",
                     e.Message, "#A22");
             }
         }
@@ -376,13 +377,11 @@ namespace Test
 
             Assert.IsTrue(!string.IsNullOrEmpty(lastCheckpoint.message));
             Assert.IsTrue(!string.IsNullOrEmpty(lastCheckpoint.countryName));
-
         }
 
         [TestMethod]
         public void testGetTrackingByNumber2()
         {
-
             //slug is bad informed
             try
             {
@@ -395,7 +394,8 @@ namespace Test
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Assert.AreEqual("{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//RC328021065CN\"}}",
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//RC328021065CN\"}}",
                     e.Message, "#A27");
             }
         }
@@ -403,7 +403,6 @@ namespace Test
         [TestMethod]
         public void testGetTrackingByNumber3()
         {
-
             //if the trackingNumber is bad informed
             try
             {
@@ -416,12 +415,13 @@ namespace Test
             catch (Exception e)
             {
                 Console.Write(e.Message);
-                Assert.AreEqual("{\"meta\":{\"code\":4004,\"message\":\"Tracking does not exist.\",\"type\":\"NotFound\"},\"data\":{}}",
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":4004,\"message\":\"Tracking does not exist.\",\"type\":\"NotFound\"},\"data\":{}}",
                     e.Message, "#A29");
             }
         }
 
-                [TestMethod]
+        [TestMethod]
         public void testGetLastCheckpointID()
         {
             Tracking trackingGet1 = new Tracking("whatever");
@@ -432,12 +432,10 @@ namespace Test
             Assert.AreEqual("Delivered", newCheckpoint.tag);
             Assert.AreEqual("Delivered_001", newCheckpoint.subTag);
         }
-        
+
         [TestMethod]
         public void testGetTrackings()
         {
-
-
             //get the first 100 Trackings
             List<Tracking> listTrackings100 = connection.getTrackings(1);
             // Assert.AreEqual(10, listTrackings100.Count);
@@ -468,14 +466,15 @@ namespace Test
             }
             catch (Exception e)
             {
-                Assert.AreEqual("{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//asdq\"}}", e.Message);
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":404,\"message\":\"The URI requested is invalid or the resource requested does not exist.\",\"type\":\"NotFound\"},\"data\":{\"resource\":\"/v4/trackings//asdq\"}}",
+                    e.Message);
             }
         }
 
         [TestMethod]
         public void testGetAllCouriers()
         {
-
             List<Courier> couriers = connection.getAllCouriers();
 
             //check first courier
@@ -494,14 +493,15 @@ namespace Test
             }
             catch (Exception e)
             {
-                Assert.AreEqual("{\"meta\":{\"code\":401,\"message\":\"Invalid API key.\",\"type\":\"Unauthorized\"},\"data\":{}}", e.Message);
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":401,\"message\":\"Invalid API key.\",\"type\":\"Unauthorized\"},\"data\":{}}",
+                    e.Message);
             }
         }
 
         [TestMethod]
         public void testGetCouriers()
         {
-
             List<Courier> couriers = connection.getCouriers();
             //total Couriers returned
             Assert.IsTrue(couriers.Count > 10);
@@ -520,15 +520,15 @@ namespace Test
             }
             catch (Exception e)
             {
-                Assert.AreEqual("{\"meta\":{\"code\":401,\"message\":\"Invalid API key.\",\"type\":\"Unauthorized\"},\"data\":{}}", e.Message);
+                Assert.AreEqual(
+                    "{\"meta\":{\"code\":401,\"message\":\"Invalid API key.\",\"type\":\"Unauthorized\"},\"data\":{}}",
+                    e.Message);
             }
-
         }
 
         [TestMethod]
         public void testGetTrackings_A()
         {
-
             ParametersTracking parameters = new ParametersTracking();
             parameters.addSlug("usps");
             DateTime date = DateTime.Today.AddMonths(-1);
@@ -544,12 +544,11 @@ namespace Test
         [TestMethod]
         public void testGetTrackings_B()
         {
-
             ParametersTracking param1 = new ParametersTracking();
             param1.addDestination(ISO3Country.DEU);
             param1.limit = 20;
             List<Tracking> totalSpain = connection.getTrackings(param1);
-            Assert.IsTrue(totalSpain.Count >=1);
+            Assert.IsTrue(totalSpain.Count >= 1);
         }
 
         [TestMethod]
@@ -562,7 +561,6 @@ namespace Test
             List<Tracking> totalOutDelivery = connection.getTrackings(param2);
             Assert.IsTrue(totalOutDelivery.Count > 10);
             Assert.IsTrue(totalOutDelivery.Count <= 50);
-
         }
 
         [TestMethod]
@@ -578,7 +576,6 @@ namespace Test
         [TestMethod]
         public void testGetTrackings_E()
         {
-
             ParametersTracking param4 = new ParametersTracking();
             param4.keyword = "09445246482536";
             param4.addField(FieldTracking.title);
@@ -592,7 +589,6 @@ namespace Test
         [TestMethod]
         public void testGetTrackings_F()
         {
-
             ParametersTracking param5 = new ParametersTracking();
             param5.addField(FieldTracking.tracking_number);
             //param5.setLimit(50);
@@ -600,10 +596,10 @@ namespace Test
             List<Tracking> totalOutDelivery3 = connection.getTrackings(param5);
             Assert.AreEqual(null, totalOutDelivery3[0].title);
         }
+
         [TestMethod]
         public void testGetTrackings_G()
         {
-
             ParametersTracking param6 = new ParametersTracking();
             param6.addField(FieldTracking.tracking_number);
             param6.addField(FieldTracking.title);
@@ -616,10 +612,10 @@ namespace Test
             List<Tracking> totalOutDelivery4 = connection.getTrackings(param6);
             Assert.AreEqual(null, totalOutDelivery4[0].slug);
         }
+
         [TestMethod]
         public void testGetTrackings_H()
         {
-
             ParametersTracking param7 = new ParametersTracking();
             param7.addOrigin(ISO3Country.ESP);
             // param7.setLimit(50);
@@ -631,21 +627,18 @@ namespace Test
         [TestMethod]
         public void testRetrack()
         {
-
             Tracking tracking = new Tracking("9400110897700003231250");
             tracking.slug = "usps";
             try
             {
                 connection.retrack(tracking);
                 Assert.IsTrue(false);
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Assert.IsTrue(e.Message.Contains("4013"));
                 Assert.IsTrue(e.Message.Contains("Retrack is not allowed. You can only retrack an inactive tracking."));
-
             }
         }
 
@@ -658,6 +651,21 @@ namespace Test
             Assert.AreEqual(trackingMarked.tag, StatusTag.Delivered);
             trackingMarked = connection.markTrackingAsCompeleted(tracking, "LOST");
             Assert.AreEqual(trackingMarked.tag, StatusTag.Exception);
+        }
+
+        [TestMethod]
+        public void testPredictBatch()
+        {
+            List<EstimatedDeliveryDateParam> estimatedDeliveryDates = new List<EstimatedDeliveryDateParam>();
+            var s = new String(
+                "{\"slug\": \"fedex\",\"service_type_name\": \"FEDEX HOME DELIVERY\",\"origin_address\": {\"country\": \"USA\",\"state\": \"WA\",\"postal_code\": \"98108\",\"raw_location\": \"Seattle, Washington, 98108, USA, United States\"},\"destination_address\": {\"country\": \"USA\",\"state\": \"CA\",\"postal_code\": \"92019\",\"raw_location\": \"El Cajon, California, 92019, USA, United States\"},\"weight\": {\"unit\": \"kg\",\"value\": 11},\"package_count\": 1,\"pickup_time\": \"2021-07-01 15:00:00\"}"
+            );
+            JObject o = JObject.Parse(s);
+            estimatedDeliveryDates.Add(new EstimatedDeliveryDateParam(o));
+            EstimatedDeliveryDateBatchPredictParam param =
+                new EstimatedDeliveryDateBatchPredictParam(estimatedDeliveryDates);
+            var resp = connection.batchPredict(param);
+            Assert.AreEqual(resp.Count, estimatedDeliveryDates.Count);
         }
     }
 }

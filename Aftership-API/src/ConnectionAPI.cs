@@ -6,37 +6,39 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using AftershipAPI.Enums;
+using AftershipAPI.Params;
+using Newtonsoft.Json.Serialization;
 
 namespace AftershipAPI
 {
-	/// <summary>
-	/// Connection API. Connect with the API of Afthership
-	/// </summary>
-    public class ConnectionAPI 
+    /// <summary>
+    /// Connection API. Connect with the API of Afthership
+    /// </summary>
+    public class ConnectionAPI
     {
-		String _tokenAftership;
-		String _url;
-		private static String URL_SERVER = "https://api.aftership.com/";
+        String _tokenAftership;
+        String _url;
+        private static String URL_SERVER = "https://api.aftership.com/";
 
-		//private static String URL_SERVER = "http://localhost:3001/";
-		private static String VERSION_API = "v4";
+        //private static String URL_SERVER = "http://localhost:3001/";
+        private static String VERSION_API = "v4";
 
-		/// <summary>
-		/// Constructor ConnectionAPI
-		/// </summary>
-		/// <param name="tokenAfthership"> Afthership token for the connection</param>
-		/// <returns></returns>
-		public ConnectionAPI( String tokenAfthership, String url = null)
+        /// <summary>
+        /// Constructor ConnectionAPI
+        /// </summary>
+        /// <param name="tokenAfthership"> Afthership token for the connection</param>
+        /// <returns></returns>
+        public ConnectionAPI(String tokenAfthership, String url = null)
         {
-			_tokenAftership = tokenAfthership;
-			if (url != null)
-			{
-				_url = url;
-			}
-			else
-			{
-				_url = URL_SERVER;
-			}
+            _tokenAftership = tokenAfthership;
+            if (url != null)
+            {
+                _url = url;
+            }
+            else
+            {
+                _url = URL_SERVER;
+            }
         }
 
         /// <summary>
@@ -47,42 +49,49 @@ namespace AftershipAPI
         ///               The fields an user can update are: smses, emails, title, customerName, orderID, orderIDPath,
         ///               customFields</param>
         /// <returns>The last Checkpoint object</returns>
-        public Tracking putTracking(Tracking tracking){
-
-            String parametersExtra="";
-            if(tracking.id!=null && !(tracking.id.CompareTo("")==0)){
+        public Tracking putTracking(Tracking tracking)
+        {
+            String parametersExtra = "";
+            if (tracking.id != null && !(tracking.id.CompareTo("") == 0))
+            {
                 parametersExtra = tracking.id;
-            }else {
-                String paramRequiredFields = this.replaceFirst(tracking.getQueryRequiredFields(),"&", "?");
-                parametersExtra = tracking.slug +"/"+tracking.trackingNumber+paramRequiredFields;
+            }
+            else
+            {
+                String paramRequiredFields = this.replaceFirst(tracking.getQueryRequiredFields(), "&", "?");
+                parametersExtra = tracking.slug + "/" + tracking.trackingNumber + paramRequiredFields;
             }
 
 
-            JObject response = this.request("PUT", "/trackings/"+parametersExtra, tracking.generatePutJSON());
+            JObject response = this.request("PUT", "/trackings/" + parametersExtra, tracking.generatePutJSON());
 
-            return new Tracking((JObject)response["data"]["tracking"]);
-
+            return new Tracking((JObject) response["data"]["tracking"]);
         }
+
         /// <summary>
         /// Return the tracking information of the last checkpoint of a single tracking
         /// </summary>
         /// <param name="tracking"> A Tracking to get the last checkpoint of, it should have tracking number and slug at least</param>
         /// <returns>The last Checkpoint object</returns>
-        public Checkpoint getLastCheckpoint(Tracking tracking){
-
-            String parametersExtra="";
-            if(tracking.id!=null && !(tracking.id.Equals(""))){
+        public Checkpoint getLastCheckpoint(Tracking tracking)
+        {
+            String parametersExtra = "";
+            if (tracking.id != null && !(tracking.id.Equals("")))
+            {
                 parametersExtra = tracking.id;
-            }else {                         
-                String paramRequiredFields =   this.replaceFirst (tracking.getQueryRequiredFields (), "&", "?");  
-                parametersExtra = tracking.slug+"/"+tracking.trackingNumber+paramRequiredFields;
+            }
+            else
+            {
+                String paramRequiredFields = this.replaceFirst(tracking.getQueryRequiredFields(), "&", "?");
+                parametersExtra = tracking.slug + "/" + tracking.trackingNumber + paramRequiredFields;
             }
 
-            JObject response = this.request("GET","/last_checkpoint/"+parametersExtra,null);
+            JObject response = this.request("GET", "/last_checkpoint/" + parametersExtra, null);
 
             JObject checkpointJSON = (JObject) response["data"]["checkpoint"];
             Checkpoint checkpoint = null;
-            if(checkpointJSON.Count!=0) {
+            if (checkpointJSON.Count != 0)
+            {
                 checkpoint = new Checkpoint(checkpointJSON);
             }
 
@@ -98,34 +107,38 @@ namespace AftershipAPI
         /// <param name="lang"> A String with the language desired. Support Chinese to English translation
         ///                      for china-ems and china-post only</param>
         /// <returns>The last Checkpoint object</returns>
- 
-        public Checkpoint getLastCheckpoint(Tracking tracking,List<FieldCheckpoint> fields, String lang){
-
+        public Checkpoint getLastCheckpoint(Tracking tracking, List<FieldCheckpoint> fields, String lang)
+        {
             String parameters = null;
             QueryString qs = new QueryString();
-            
-            if (fields!=null) qs.add("fields", string.Join(",",fields));
-            if (lang!=null && !lang.Equals("")) qs.add("lang",lang);
-            parameters = this.replaceFirst( qs.ToString(),"&","?");
 
-            String parametersExtra="";
-            if(tracking.id!=null && !tracking.id.Equals("")){
-                parametersExtra = tracking.id+parameters;
-            }else {
+            if (fields != null) qs.add("fields", string.Join(",", fields));
+            if (lang != null && !lang.Equals("")) qs.add("lang", lang);
+            parameters = this.replaceFirst(qs.ToString(), "&", "?");
+
+            String parametersExtra = "";
+            if (tracking.id != null && !tracking.id.Equals(""))
+            {
+                parametersExtra = tracking.id + parameters;
+            }
+            else
+            {
                 String paramRequiredFields = tracking.getQueryRequiredFields();
-                parametersExtra = tracking.slug+"/"+tracking.trackingNumber+parameters+paramRequiredFields;
+                parametersExtra = tracking.slug + "/" + tracking.trackingNumber + parameters + paramRequiredFields;
             }
 
-            JObject response = this.request("GET","/last_checkpoint/"+parametersExtra,null);
+            JObject response = this.request("GET", "/last_checkpoint/" + parametersExtra, null);
 
-            JObject checkpointJSON = (JObject)response["data"]["checkpoint"];
+            JObject checkpointJSON = (JObject) response["data"]["checkpoint"];
             Checkpoint checkpoint = null;
-            if(checkpointJSON.Count!=0) {
+            if (checkpointJSON.Count != 0)
+            {
                 checkpoint = new Checkpoint(checkpointJSON);
             }
 
             return checkpoint;
         }
+
         /// <summary>
         /// Retrack an expired tracking once
         /// </summary>
@@ -135,24 +148,29 @@ namespace AftershipAPI
         ///                      for china-ems and china-post only</param>
         /// <returns> A JSONObject with the response. It will contain the status code of the operation, trackingNumber,
         ///         slug and active (to true)</returns>
+        public bool retrack(Tracking tracking)
+        {
+            String paramRequiredFields = this.replaceFirst(tracking.getQueryRequiredFields(), "&", "?");
 
-        public bool retrack(Tracking tracking){
+            JObject response = this.request("POST", "/trackings/" + tracking.slug +
+                                                    "/" + tracking.trackingNumber + "/retrack" + paramRequiredFields,
+                null);
 
-            String paramRequiredFields = this.replaceFirst(tracking.getQueryRequiredFields(),"&","?");
-
-            JObject response = this.request("POST","/trackings/"+tracking.slug+
-                "/"+tracking.trackingNumber+"/retrack"+paramRequiredFields,null);
-
-            if ( (int)response["meta"]["code"]==200) {
-                if ((bool)response["data"]["tracking"]["active"]) {
+            if ((int) response["meta"]["code"] == 200)
+            {
+                if ((bool) response["data"]["tracking"]["active"])
+                {
                     return true;
-                }else {
+                }
+                else
+                {
                     return false;
                 }
-            }else {
+            }
+            else
+            {
                 return false;
             }
-
         }
 
         /// <summary>
@@ -162,22 +180,23 @@ namespace AftershipAPI
         /// <param name="param">page Indicated the page of 100 trackings to return, if page is 1 will return the first 100,
         ///  if is 2 -> 100-200 etc</param> 
         /// <returns> A List of Tracking Objects from your account. Max 100 trackings
-
-        public List<Tracking> getTrackings(int page){
-
+        public List<Tracking> getTrackings(int page)
+        {
             List<Tracking> trackingList = null;
 
-            JObject response = this.request("GET","/trackings?limit=100&page="+page,null);
-            JArray trackingJSON = (JArray)response["data"]["trackings"];
-            if(trackingJSON.Count!=0) {
+            JObject response = this.request("GET", "/trackings?limit=100&page=" + page, null);
+            JArray trackingJSON = (JArray) response["data"]["trackings"];
+            if (trackingJSON.Count != 0)
+            {
                 trackingList = new List<Tracking>();
 
-                for (int i = 0; i < trackingJSON.Count; i++) {
-                    trackingList.Add(new Tracking((JObject)trackingJSON[i]));
+                for (int i = 0; i < trackingJSON.Count; i++)
+                {
+                    trackingList.Add(new Tracking((JObject) trackingJSON[i]));
                 }
             }
-            return trackingList;
 
+            return trackingList;
         }
 
         /// <summary>
@@ -185,19 +204,24 @@ namespace AftershipAPI
         /// </summary>
         /// <param name="parameters"> ParametersTracking Object, with the information to get
         /// <returns> A List of Tracking Objects from your account.
-        public List<Tracking> getTrackings(ParametersTracking parameters){
+        public List<Tracking> getTrackings(ParametersTracking parameters)
+        {
             List<Tracking> trackingList = null;
-            int size =0;
-            JObject response = this.request("GET","/trackings?"+parameters.generateQueryString(),null);
-            JArray trackingJSON = (JArray)response["data"]["trackings"];
-            if(trackingJSON.Count!=0) {
-                size =  (int)response["data"]["count"];
+            int size = 0;
+            JObject response = this.request("GET", "/trackings?" + parameters.generateQueryString(), null);
+            JArray trackingJSON = (JArray) response["data"]["trackings"];
+            if (trackingJSON.Count != 0)
+            {
+                size = (int) response["data"]["count"];
                 trackingList = new List<Tracking>();
-                for (int i = 0; i < trackingJSON.Count; i++) {
-                    trackingList.Add(new Tracking((JObject)trackingJSON[i]));
+                for (int i = 0; i < trackingJSON.Count; i++)
+                {
+                    trackingList.Add(new Tracking((JObject) trackingJSON[i]));
                 }
+
                 parameters.total = size;
             }
+
             return trackingList;
         }
 
@@ -206,9 +230,9 @@ namespace AftershipAPI
         ///Return a list of couriers supported by AfterShip along with their names, URLs and slugs
         /// </summary>
         /// <returns>A list of Object Courier, with all the couriers supported by the API
-        public List<Courier> getAllCouriers(){
-
-            JObject response = this.request("GET","/couriers/all",null);
+        public List<Courier> getAllCouriers()
+        {
+            JObject response = this.request("GET", "/couriers/all", null);
 
 
             JArray couriersJSON = (JArray) response["data"]["couriers"];
@@ -216,12 +240,14 @@ namespace AftershipAPI
 
             JObject element;
 
-            for (int i = 0; i < couriersJSON.Count; i++) {
-                element = (JObject)couriersJSON[i];
+            for (int i = 0; i < couriersJSON.Count; i++)
+            {
+                element = (JObject) couriersJSON[i];
 
                 Courier newCourier = new Courier(element);
                 couriers.Add(newCourier);
             }
+
             return couriers;
         }
 
@@ -229,9 +255,9 @@ namespace AftershipAPI
         ///Return a list of user couriers enabled by user's account along their names, URLs, slugs, required fields.
         /// </summary>
         /// <returns>A list of Object Courier, with all the couriers supported by the API
-        public List<Courier> getCouriers(){
-
-            JObject response = this.request("GET","/couriers",null);
+        public List<Courier> getCouriers()
+        {
+            JObject response = this.request("GET", "/couriers", null);
 
 
             JArray couriersJSON = (JArray) response["data"]["couriers"];
@@ -239,12 +265,14 @@ namespace AftershipAPI
 
             JObject element;
 
-            for (int i = 0; i < couriersJSON.Count;i++){
-                element = (JObject)couriersJSON[i];
+            for (int i = 0; i < couriersJSON.Count; i++)
+            {
+                element = (JObject) couriersJSON[i];
 
                 Courier newCourier = new Courier(element);
                 couriers.Add(newCourier);
             }
+
             return couriers;
         }
 
@@ -254,29 +282,32 @@ namespace AftershipAPI
         /// </summary>
         /// <param name="trackingNumber"> tracking number to match with couriers
         /// <returnsA List of Couriers objects that match the provided trackingNumber
-
-        public List<Courier> detectCouriers(String trackingNumber){
+        public List<Courier> detectCouriers(String trackingNumber)
+        {
             JObject body = new JObject();
             JObject tracking = new JObject();
 
             // trackingJSON.Add("slug",new JValue(_slug));
 
             if (trackingNumber == null || trackingNumber.Equals(""))
-                throw  new System.ArgumentException("The tracking number should be always informed for the method detectCouriers");
-            tracking.Add("tracking_number",new JValue(trackingNumber));
-            body.Add("tracking",tracking);
-            JObject response = this.request("POST","/couriers/detect",body.ToString());
+                throw new System.ArgumentException(
+                    "The tracking number should be always informed for the method detectCouriers");
+            tracking.Add("tracking_number", new JValue(trackingNumber));
+            body.Add("tracking", tracking);
+            JObject response = this.request("POST", "/couriers/detect", body.ToString());
             List<Courier> couriers = new List<Courier>();
 
-            JArray couriersJSON = (JArray)response["data"]["couriers"];
+            JArray couriersJSON = (JArray) response["data"]["couriers"];
             JObject element;
 
-            for (int i = 0; i < couriersJSON.Count; i++) {
+            for (int i = 0; i < couriersJSON.Count; i++)
+            {
                 element = (JObject) couriersJSON[i];
 
                 Courier newCourier = new Courier(element);
                 couriers.Add(newCourier);
             }
+
             return couriers;
         }
 
@@ -293,42 +324,46 @@ namespace AftershipAPI
         /// such as `dynamic-logistics`.(optional)</param>
         /// <param name="slugs"> The slug of couriers to detect.
         /// <returns>A List of Couriers objects that match the provided trackingNumber</returns>
- 
-        public List<Courier> detectCouriers(String trackingNumber,String trackingPostalCode, String trackingShipDate,
-            String trackingAccountNumber, List<String> slugs){
+        public List<Courier> detectCouriers(String trackingNumber, String trackingPostalCode, String trackingShipDate,
+            String trackingAccountNumber, List<String> slugs)
+        {
             JObject body = new JObject();
             JObject tracking = new JObject();
 
             if (trackingNumber == null || trackingNumber.Equals(""))
-                throw  new System.ArgumentException("Tracking number should be always informed for the method detectCouriers");
-            tracking.Add("tracking_number",new JValue(trackingNumber));
+                throw new System.ArgumentException(
+                    "Tracking number should be always informed for the method detectCouriers");
+            tracking.Add("tracking_number", new JValue(trackingNumber));
 
-            if (trackingPostalCode!= null && !trackingPostalCode.Equals(""))
+            if (trackingPostalCode != null && !trackingPostalCode.Equals(""))
                 tracking.Add("tracking_postal_code", new JValue(trackingPostalCode));
-            if (trackingShipDate!= null && !trackingShipDate.Equals(""))
+            if (trackingShipDate != null && !trackingShipDate.Equals(""))
                 tracking.Add("tracking_ship_date", new JValue(trackingShipDate));
-            if (trackingAccountNumber!= null && !trackingAccountNumber.Equals(""))
+            if (trackingAccountNumber != null && !trackingAccountNumber.Equals(""))
                 tracking.Add("tracking_account_number", new JValue(trackingAccountNumber));
 
-            if (slugs != null && slugs.Count!=0) {
+            if (slugs != null && slugs.Count != 0)
+            {
                 JArray slugsJSON = new JArray(slugs);
                 tracking.Add("slug", slugsJSON);
             }
 
-            body.Add("tracking",tracking);
+            body.Add("tracking", tracking);
 
-            JObject response = this.request("POST","/couriers/detect",body.ToString());
+            JObject response = this.request("POST", "/couriers/detect", body.ToString());
             List<Courier> couriers = new List<Courier>();
 
             JArray couriersJSON = (JArray) response["data"]["couriers"];
             JObject element;
 
-            for (int i = 0; i < couriersJSON.Count; i++) {
+            for (int i = 0; i < couriersJSON.Count; i++)
+            {
                 element = (JObject) couriersJSON[i];
 
                 Courier newCourier = new Courier(element);
                 couriers.Add(newCourier);
             }
+
             return couriers;
         }
 
@@ -337,134 +372,142 @@ namespace AftershipAPI
         /// </summary>
         /// <param name="parameters"> ParametersTracking Object, with the information to get
         /// <returns> The next page of Tracking Objects from your account
-
-
-        public List<Tracking> getTrackingsNext(ParametersTracking parameters){
-            parameters.page = parameters.page +1;
+        public List<Tracking> getTrackingsNext(ParametersTracking parameters)
+        {
+            parameters.page = parameters.page + 1;
             return this.getTrackings(parameters);
         }
 
-		/// <summary>
-		/// A Tracking object with the information to creates
-		///	The field trackingNumber SHOULD be informed, otherwise an exception will be thrown
-		/// The fields an user can add are: slug, smses, emails, title, customerName, orderID, orderIDPath,
-		/// customFields, destinationCountryISO3 (the others are provided by the Server)
-		/// </summary>
-		/// <param name="tracking"></param>
-		/// <returns> A Tracking object with the fields in the same state as the server, if a field has an error,
-		///          it won't be added, and won't be shown in the response (for example if the smses
-		///		     phone number is not valid). This response doesn't have checkpoints informed!</returns>
-		
+        /// <summary>
+        /// A Tracking object with the information to creates
+        ///	The field trackingNumber SHOULD be informed, otherwise an exception will be thrown
+        /// The fields an user can add are: slug, smses, emails, title, customerName, orderID, orderIDPath,
+        /// customFields, destinationCountryISO3 (the others are provided by the Server)
+        /// </summary>
+        /// <param name="tracking"></param>
+        /// <returns> A Tracking object with the fields in the same state as the server, if a field has an error,
+        ///          it won't be added, and won't be shown in the response (for example if the smses
+        ///		     phone number is not valid). This response doesn't have checkpoints informed!</returns>
         public Tracking createTracking(Tracking tracking)
-		{
-			String tracking_json  = tracking.getJSONPost();
-
-			JObject response = this.request("POST", "/trackings", tracking_json);
-
-
-			return new Tracking((JObject)response["data"]["tracking"]);
-		}
-
-		/// <summary>
-		/// Delete a tracking from your account, if the tracking.id property is defined
-		/// it will delete that tracking from the system, if not it will take the 
-		/// tracking tracking.number and the tracking.slug for identify the tracking
-		/// </summary>
-		/// <param name="tracking"> A Tracking to delete</param>
-		/// <returns>A boolean, true if delete correctly, and false otherwise</returns>
-		public bool deleteTracking(Tracking tracking)
         {
-			String parametersAll;
-			if (tracking.id != null && !tracking.id.Equals ("")) {
-				parametersAll = tracking.id;
+            String tracking_json = tracking.getJSONPost();
 
-			} else {
-				//get the require fields if any (postal_code, tracking_account etc..)
-				parametersAll = tracking.slug + "/" + tracking.trackingNumber;
-			}
-			JObject response =  this.request("DELETE","/trackings/"+parametersAll,null);
+            JObject response = this.request("POST", "/trackings", tracking_json);
 
 
-			if (Convert.ToInt32(response["meta"]["code"].ToString())==200)
-				return true;
-			else
-				return false;
-
-        }
-		/// <summary>
-		/// Get a specific tracking from your account. If the trackingGet.id property 
-		/// is defined it will get that tracking from the system, if not it will take 
-		/// the tracking tracking.number and the tracking.slug for identify the tracking
-		/// </summary>
-		/// <param name="trackingGet">A Tracking to get.</param></param>
-		/// <returns> A Tracking object with the response</returns>
-		
-        public Tracking getTrackingByNumber(Tracking trackingGet){
-
-			String parametersExtra;
-			if (trackingGet.id != null && !trackingGet.id.Equals ("")) {
-				 parametersExtra = trackingGet.id;
-
-			} else {
-				//get the require fields if any (postal_code, tracking_account etc..)
-				String paramRequiredFields = replaceFirst (trackingGet.getQueryRequiredFields (), "&", "?");
-				parametersExtra = trackingGet.slug + "/" + trackingGet.trackingNumber +
-					paramRequiredFields;
-			}
-			JObject response = request("GET","/trackings/"+parametersExtra,null);
-			JObject trackingJSON = (JObject) response["data"]["tracking"];
-			Tracking tracking = null;
-			if(trackingJSON.Count!=0) {
-				tracking = new Tracking(trackingJSON);
-			}
-
-			return tracking;
+            return new Tracking((JObject) response["data"]["tracking"]);
         }
 
-		/// <summary>
-		///  Get a specific tracking from your account. If the trackingGet.id property 
-		/// is defined it will get that tracking from the system, if not it will take 
-		/// the tracking tracking.number and the tracking.slug for identify the tracking
-		/// </summary>
-		/// <param name="trackingGet">A Tracking to get</param>
-		/// <param name="fields">A list of fields wanted to be in the response</param>
-		/// <param name="lang">A String with the language desired. Support Chinese to 
-		/// English translation for china-ems and china-post only</param>
-		/// <returns></returns>
-		public Tracking getTrackingByNumber(Tracking trackingGet,List<FieldTracking> fields,String lang){
-		
-			String parametersAll;
+        /// <summary>
+        /// Delete a tracking from your account, if the tracking.id property is defined
+        /// it will delete that tracking from the system, if not it will take the 
+        /// tracking tracking.number and the tracking.slug for identify the tracking
+        /// </summary>
+        /// <param name="tracking"> A Tracking to delete</param>
+        /// <returns>A boolean, true if delete correctly, and false otherwise</returns>
+        public bool deleteTracking(Tracking tracking)
+        {
+            String parametersAll;
+            if (tracking.id != null && !tracking.id.Equals(""))
+            {
+                parametersAll = tracking.id;
+            }
+            else
+            {
+                //get the require fields if any (postal_code, tracking_account etc..)
+                parametersAll = tracking.slug + "/" + tracking.trackingNumber;
+            }
 
-			//encode the fields required
-			String params_query;
-			QueryString qs = new QueryString();
-			if (fields != null) {
-				qs.add ("fields", parseListFieldTracking(fields));
-			}
+            JObject response = this.request("DELETE", "/trackings/" + parametersAll, null);
 
-			if (lang!=null && !lang.Equals("")) qs.add("lang",lang);
 
-			params_query = replaceFirst(qs.ToString(),"&","?");
+            if (Convert.ToInt32(response["meta"]["code"].ToString()) == 200)
+                return true;
+            else
+                return false;
+        }
 
-			if (trackingGet.id != null && !trackingGet.id.Equals ("")) {
-				parametersAll = trackingGet.id+params_query;
+        /// <summary>
+        /// Get a specific tracking from your account. If the trackingGet.id property 
+        /// is defined it will get that tracking from the system, if not it will take 
+        /// the tracking tracking.number and the tracking.slug for identify the tracking
+        /// </summary>
+        /// <param name="trackingGet">A Tracking to get.</param></param>
+        /// <returns> A Tracking object with the response</returns>
+        public Tracking getTrackingByNumber(Tracking trackingGet)
+        {
+            String parametersExtra;
+            if (trackingGet.id != null && !trackingGet.id.Equals(""))
+            {
+                parametersExtra = trackingGet.id;
+            }
+            else
+            {
+                //get the require fields if any (postal_code, tracking_account etc..)
+                String paramRequiredFields = replaceFirst(trackingGet.getQueryRequiredFields(), "&", "?");
+                parametersExtra = trackingGet.slug + "/" + trackingGet.trackingNumber +
+                                  paramRequiredFields;
+            }
 
-			} else {
-				//get the require fields if any (postal_code, tracking_account etc..)
-				String paramRequiredFields = trackingGet.getQueryRequiredFields();
-				parametersAll = trackingGet.slug +
-				"/" + trackingGet.trackingNumber + params_query + paramRequiredFields;
-			}
+            JObject response = request("GET", "/trackings/" + parametersExtra, null);
+            JObject trackingJSON = (JObject) response["data"]["tracking"];
+            Tracking tracking = null;
+            if (trackingJSON.Count != 0)
+            {
+                tracking = new Tracking(trackingJSON);
+            }
 
-			JObject response = this.request("GET","/trackings/"+parametersAll,null);
-			JObject trackingJSON = (JObject) response["data"]["tracking"];
-			Tracking tracking = null;
-			if(trackingJSON.Count!=0) {
-				tracking = new Tracking(trackingJSON);
-			}
+            return tracking;
+        }
 
-			return tracking;
-		}
+        /// <summary>
+        ///  Get a specific tracking from your account. If the trackingGet.id property 
+        /// is defined it will get that tracking from the system, if not it will take 
+        /// the tracking tracking.number and the tracking.slug for identify the tracking
+        /// </summary>
+        /// <param name="trackingGet">A Tracking to get</param>
+        /// <param name="fields">A list of fields wanted to be in the response</param>
+        /// <param name="lang">A String with the language desired. Support Chinese to 
+        /// English translation for china-ems and china-post only</param>
+        /// <returns></returns>
+        public Tracking getTrackingByNumber(Tracking trackingGet, List<FieldTracking> fields, String lang)
+        {
+            String parametersAll;
+
+            //encode the fields required
+            String params_query;
+            QueryString qs = new QueryString();
+            if (fields != null)
+            {
+                qs.add("fields", parseListFieldTracking(fields));
+            }
+
+            if (lang != null && !lang.Equals("")) qs.add("lang", lang);
+
+            params_query = replaceFirst(qs.ToString(), "&", "?");
+
+            if (trackingGet.id != null && !trackingGet.id.Equals(""))
+            {
+                parametersAll = trackingGet.id + params_query;
+            }
+            else
+            {
+                //get the require fields if any (postal_code, tracking_account etc..)
+                String paramRequiredFields = trackingGet.getQueryRequiredFields();
+                parametersAll = trackingGet.slug +
+                                "/" + trackingGet.trackingNumber + params_query + paramRequiredFields;
+            }
+
+            JObject response = this.request("GET", "/trackings/" + parametersAll, null);
+            JObject trackingJSON = (JObject) response["data"]["tracking"];
+            Tracking tracking = null;
+            if (trackingJSON.Count != 0)
+            {
+                tracking = new Tracking(trackingJSON);
+            }
+
+            return tracking;
+        }
 
         /// <summary>
         /// Mark a tracking as completed. The tracking won't auto update until retrack it.
@@ -484,11 +527,11 @@ namespace AftershipAPI
             //get the require fields if any (postal_code, tracking_account etc..)
             String paramRequiredFields = replaceFirst(tracking.getQueryRequiredFields(), "&", "?");
             parametersExtra = tracking.slug + "/" + tracking.trackingNumber + "/mark-as-completed" +
-                paramRequiredFields;
+                              paramRequiredFields;
             body.Add("reason", reason);
 
             JObject response = request("POST", "/trackings/" + parametersExtra, body.ToString());
-            JObject trackingJSON = (JObject)response["data"]["tracking"];
+            JObject trackingJSON = (JObject) response["data"]["tracking"];
             Tracking trackingObj = null;
             if (trackingJSON.Count != 0)
             {
@@ -510,8 +553,8 @@ namespace AftershipAPI
         public JObject request(String method, String urlResource, String body)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			string url = _url  + VERSION_API + urlResource;
-			string json_response = "";
+            string url = _url + VERSION_API + urlResource;
+            string json_response = "";
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 
@@ -519,83 +562,112 @@ namespace AftershipAPI
             WebHeaderCollection header = new WebHeaderCollection();
             header.Add("aftership-api-key", _tokenAftership);
             request.Headers = header;
-			request.ContentType = "application/json";
-			request.Method = method;
-			// Console.WriteLine(method+" Requesting the URL :"+ url);
+            request.ContentType = "application/json";
+            request.Method = method;
+            // Console.WriteLine(method+" Requesting the URL :"+ url);
 
-			if(body!=null){
-               // Console.WriteLine ("body: " + body);
-				//is a POST or PUT  
-				using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-				{
-					streamWriter.Write(body);
-					streamWriter.Flush();
-					streamWriter.Close();
-				}
-			}
+            if (body != null)
+            {
+                // Console.WriteLine ("body: " + body);
+                //is a POST or PUT  
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(body);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+            }
 
-			try{
-				HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
 //                if(response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created){
-                    StreamReader reader = new StreamReader(response.GetResponseStream());
-                    json_response = reader.ReadToEnd();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                json_response = reader.ReadToEnd();
 //                }else if (response.StatusCode == HttpStatusCode.RequestTimeout){
 //                    throw new TimeoutException();
 //                }else{
 //                    throw new WebException(response.StatusCode.ToString());
 //                }
-			}catch(WebException e){
-				if (e.Response == null) {
+            }
+            catch (WebException e)
+            {
+                if (e.Response == null)
+                {
                     throw e;
-					//timeout or bad internet conexion
-				} else {
-					//probably Aftership will give more information of the problem, so we read the response
-					HttpWebResponse response = e.Response as HttpWebResponse;				
-					using (Stream stream = response.GetResponseStream ())
-					using (var reader = new StreamReader (stream)) {
-						String text = reader.ReadToEnd ();
-						throw new WebException (text, e);
-					}
-				}
-
-			}catch(Exception e){
+                    //timeout or bad internet conexion
+                }
+                else
+                {
+                    //probably Aftership will give more information of the problem, so we read the response
+                    HttpWebResponse response = e.Response as HttpWebResponse;
+                    using (Stream stream = response.GetResponseStream())
+                    using (var reader = new StreamReader(stream))
+                    {
+                        String text = reader.ReadToEnd();
+                        throw new WebException(text, e);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
                 throw e;
             }
+
 //            }finally{
 //                Console.WriteLine ("Finish Request "+DateTime.Now);
 //            }
-            Console.WriteLine ("Response request: "+json_response+"*");
-			return JObject.Parse(json_response);;
+            Console.WriteLine("Response request: " + json_response + "*");
+            return JObject.Parse(json_response);
+            ;
         }
 
 
-		/// Parse a List<FieldTracking> to List<String>
-		public List<String> parseListFieldTracking(List<FieldTracking> list){
+        /// Parse a List<FieldTracking> to List<String>
+        public List<String> parseListFieldTracking(List<FieldTracking> list)
+        {
+            List<String> listString = new List<String>();
 
-			List<String> listString = new List<String> ();
+            foreach (FieldTracking element in list) // Loop through List with foreach
+            {
+                listString.Add(element.ToString());
+            }
 
-			foreach (FieldTracking element in list) // Loop through List with foreach
-			{
-				listString.Add (element.ToString());
-			}
+            return listString;
+        }
 
-			return listString;
+        /// Replace first ocurrence from a String
+        public String replaceFirst(string text, string search, string replace)
+        {
+            int pos = text.IndexOf(search);
+            if (pos < 0)
+            {
+                return text;
+            }
 
-		}
+            return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+        }
 
-		/// Replace first ocurrence from a String
-		public String replaceFirst(string text, string search, string replace)
-		{
-			int pos = text.IndexOf(search);
-			if (pos < 0)
-			{
-				return text;
-			}
-			return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
-		}
+        public List<EstimatedDeliveryDateParam> batchPredict(EstimatedDeliveryDateBatchPredictParam param)
+        {
+            JObject response = this.request(
+                "POST",
+                "/estimated-delivery-date/predict-batch",
+                param.getJSONPost()
+            );
+            JArray responseJSON = (JArray) response["data"]["estimated_delivery_dates"];
 
-	}
+            List<EstimatedDeliveryDateParam> estimatedDeliveryDates = null;
+            if (responseJSON.Count != 0)
+            {
+                estimatedDeliveryDates = new List<EstimatedDeliveryDateParam>();
+                for (int i = 0; i < responseJSON.Count; i++)
+                {
+                    estimatedDeliveryDates.Add(new EstimatedDeliveryDateParam((JObject) responseJSON[i]));
+                }
+            }
 
-
-    
+            return estimatedDeliveryDates;
+        }
+    }
 }
