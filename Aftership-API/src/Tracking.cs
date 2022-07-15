@@ -1000,6 +1000,10 @@ namespace AftershipAPI
                 trackingJSON["custom_fields"] = customFieldsJSON;
             }
 
+            if (_shipmentType != null) 
+            {
+                trackingJSON.Add("shipment_type", new JValue(_shipmentType));
+            }
 
             globalJSON["tracking"] = trackingJSON;
 
@@ -1060,6 +1064,11 @@ namespace AftershipAPI
                 }
 
                 trackingJSON["custom_fields"] = customFieldsJSON;
+            }
+
+            if (_shipmentType != null) 
+            {
+                trackingJSON.Add("shipment_type", new JValue(_shipmentType));
             }
 
             globalJSON["tracking"] = trackingJSON;
