@@ -1,8 +1,6 @@
 API Aftership .NET SDK
 ==============
 
-Aftership SDK .NET Version 6.0.0
-
 Before you start
 --------------
 
@@ -113,58 +111,6 @@ Examples of code
  	trackingMark.slug = "canada-post";
  	connection.markTrackingAsCompeleted (trackingMark,"DELIVERED");
 
-#### 2022-05-07 v6.0.3
-- Update tracking fields
-
-#### 2022-02-16 v6.0.2
-- Update tracking fields
-
-#### 2021-09-18 v6.0.1
-- Update tracking fields
-
-#### 2021-06-24 v6.0.0
-- Upgrade Framework to .NET5
-
-#### 2021-04-30 v5.0.5
-- Add mark tracking as completed function.
-
-#### 2021-03-26 v5.0.4
-- Add Available For Pickup status tag.
-- Checkpoint: add Slug, Location, Subtag Message.
-- Tracking: Courier Tracking Link, Subtag, Subtag Message.
-- Fix SignedBy field (always empty).
-- Fix casting and type conversions exception issue.
-
-#### 2021-03-26 v5.0.3
-- Fix SSL exception
-
-#### 2015-05-11 v5.0.0
-- Change the way we deal with dates, so differents Date Culture don't have any issues.
-- The user will receive the date to String in their local Timezone **breaking change**
-- Change dependencies:
-	- NewtonSoft 8.0.1 (latest stable). **breaking change**
-
-#### 2015-05-11 v4.0.11
-- Rearrange all the code (we wont bump the version cause is the same). 
-
-#### 2015-05-11 v4.0.11
-- Change dependecies:
-	- Delete dependencies Microsoft added automatically not needed.
-- Delete a line printing the request to the Aftership server.
-
-#### 2015-05-11 v4.0.9
-- Change dependencies:
-	- NewtonSoft 6.0.8 (latest stable).
-	- Change the test framework to Microsoft unitesting (instead of use Nunit).
-	- Delete dependencies, now only need Newtonsoft.Json and System.
-
-#### 2015-01-05 v4.0.8
-- Dependencies:
-	-  Newtonsoft.Json 3.5.8
-	-  System.Web
-	-  System.Net
-	-  System
-	
 ## License
 Copyright (c) 2015 Aftership  
 Licensed under the MIT license.
