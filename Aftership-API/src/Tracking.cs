@@ -385,7 +385,7 @@ namespace AftershipAPI
                 : (string) trackingJSON["courier_tracking_link"];
             _android = new List<String>();
             _ios = new List<String>();
-            _deliveryTime = trackingJSON["delivery_time"].IsNullOrEmpty() ? 0 : (int) trackingJSON["tracked_count"];
+            _deliveryTime = trackingJSON["delivery_time"].IsNullOrEmpty() ? 0 : (int) trackingJSON["delivery_time"];
             _lastUpdatedAt = trackingJSON["last_updated_at"].IsNullOrEmpty()
                 ? DateTime.MinValue
                 : (DateTime) trackingJSON["last_updated_at"];
